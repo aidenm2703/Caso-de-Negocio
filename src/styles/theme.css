@@ -1,0 +1,73 @@
+/**
+ * SISTEMA DE DISEÑO SOL DE CASA - VARIABLES Y TEMAS
+ * Paleta corporativa: Amarillo Sol (#FFC531), Verde Éxito (#2E9E68), Negro Tinta (#1C1917), Crema (#FBF9F4)
+ * Colores de canal: Meta (#E1306C) y Google (#1A73E8)
+ */
+
+:root {
+  /* Marca Sol de Casa */
+  --primary-sun: #FFC531;
+  --primary-sun-hover: #E5AD23;
+  --primary-sun-light: #FFF8E6;
+  --accent-green: #2E9E68;
+  --accent-green-light: #EBF7F1;
+  --accent-red: #D9383A;
+  --accent-red-light: #FDECEC;
+  --accent-yellow: #F59E0B;
+  --accent-yellow-light: #FEF3C7;
+
+  /* Canales de Marketing */
+  --channel-meta: #E1306C;
+  --channel-meta-light: #FCE7F3;
+  --channel-meta-border: #F472B6;
+  --channel-google: #1A73E8;
+  --channel-google-light: #E8F0FE;
+  --channel-google-border: #60A5FA;
+
+  /* Neutros - Modo Claro */
+  --bg-app: #FBF9F4;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F8FAFC;
+  --bg-sidebar: #FFFFFF;
+  --border-color: #E2E8F0;
+  --border-color-strong: #CBD5E1;
+  --text-main: #1C1917;
+  --text-muted: #64748B;
+  --text-light: #94A3B8;
+
+  /* Sombras y Radios */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Tipografía */
+  --font-display: 'Merriweather', 'Georgia', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+[data-theme="dark"] {
+  --bg-app: #0F172A;
+  --bg-card: #1E293B;
+  --bg-card-alt: #162032;
+  --bg-sidebar: #1E293B;
+  --border-color: #334155;
+  --border-color-strong: #475569;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-light: #64748B;
+
+  --primary-sun-light: rgba(255, 197, 49, 0.15);
+  --channel-meta-light: rgba(225, 48, 108, 0.15);
+  --channel-google-light: rgba(26, 115, 232, 0.15);
+  --accent-green-light: rgba(46, 158, 104, 0.15);
+  --accent-red-light: rgba(217, 56, 58, 0.15);
+  --accent-yellow-light: rgba(245, 158, 11, 0.15);
+  
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+}

@@ -1,0 +1,46 @@
+/**
+ * ESTILOS DE IMPRESIÓN (1 PÁGINA IMPRIMIBLE PARA ANDRÉS)
+ */
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt !important;
+  }
+
+  .app-header,
+  .tabs-nav,
+  .controls-sidebar,
+  .btn,
+  .no-print {
+    display: none !important;
+  }
+
+  .main-container {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .dashboard-grid {
+    display: block !important;
+  }
+
+  .print-page {
+    page-break-after: avoid;
+    break-after: avoid;
+    padding: 1.5cm;
+  }
+
+  .kpi-grid,
+  .charts-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .trap-banner {
+    border: 2px solid black !important;
+    background: #f8f8f8 !important;
+  }
+}
