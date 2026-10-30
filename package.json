@@ -1,0 +1,13 @@
+{
+  "name": "sol-de-casa",
+  "version": "1.0.0",
+  "description": "Caso C - Sol de Casa: Calculadora, Tablero y Simulador Financiero",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "build": "node tools/build.mjs",
+    "generate:sheets": "python tools/sheets/generate_sheets.py"
+  },
+  "author": "Sol de Casa Team",
+  "license": "ISC"
+}
