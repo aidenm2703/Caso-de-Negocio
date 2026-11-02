@@ -1,6 +1,6 @@
 /**
  * SISTEMA DE DISEÑO SOL DE CASA — TOKENS Y VARIABLES
- * Paleta: Índigo Profundo · Ámbar Cálido · Blanco Roto · Gris Pizarra
+ * Paleta: Celeste Profundo · Verde Agua · Azul Marino · Gris Azulado
  * Tipografía: Plus Jakarta Sans (display) · Inter (body)
  */
 
@@ -8,15 +8,15 @@
 
 :root {
   /* Colores de marca — modo claro */
-  --primary:        #5B21B6;         /* índigo profundo */
-  --primary-hover:  #4C1D95;
-  --primary-light:  #EDE9FE;
-  --primary-mid:    #7C3AED;
+  --primary:        #0369A1;         /* celeste profundo */
+  --primary-hover:  #075985;
+  --primary-light:  #E0F2FE;
+  --primary-mid:    #38BDF8;
 
-  --accent:         #D97706;         /* ámbar cálido */
-  --accent-hover:   #B45309;
-  --accent-light:   #FEF3C7;
-  --accent-vivid:   #F59E0B;
+  --accent:         #0F766E;         /* verde agua */
+  --accent-hover:   #115E59;
+  --accent-light:   #F0FDFA;
+  --accent-vivid:   #2DD4BF;
 
   --ok:             #047857;         /* esmeralda */
   --ok-light:       #ECFDF5;
@@ -31,28 +31,28 @@
   --warn-mid:       #D97706;
 
   /* Canales */
-  --ch-meta:        #9B1D6A;
-  --ch-meta-light:  #FCE7F3;
-  --ch-meta-border: #EC4899;
+  --ch-meta:        #4338CA;
+  --ch-meta-light:  #EEF2FF;
+  --ch-meta-border: #A5B4FC;
 
-  --ch-google:      #1D4ED8;
-  --ch-google-light:#EFF6FF;
-  --ch-google-border:#60A5FA;
+  --ch-google:      #0E7490;
+  --ch-google-light:#ECFEFF;
+  --ch-google-border:#67E8F9;
 
   /* Superficie — modo claro */
-  --bg-app:         #F8F7F4;
+  --bg-app:         #F4F8FB;
   --bg-card:        #FFFFFF;
-  --bg-card-alt:    #F5F4F1;
-  --bg-sidebar:     #FAFAF8;
-  --bg-nav:         #1E1B4B;         /* azul noche para la nav */
+  --bg-card-alt:    #EEF4F8;
+  --bg-sidebar:     #FAFCFE;
+  --bg-nav:         #0B2239;         /* azul noche para la nav */
 
-  --border:         #E4E2DD;
-  --border-strong:  #C9C7C0;
+  --border:         #D3E0E8;
+  --border-strong:  #B0C4D0;
 
-  --text-main:      #1C1917;
-  --text-secondary: #44403C;
-  --text-muted:     #78716C;
-  --text-light:     #A8A29E;
+  --text-main:      #0B2239;
+  --text-secondary: #2A4457;
+  --text-muted:     #5C7385;
+  --text-light:     #97ACBB;
 
   /* Sombras */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
@@ -106,25 +106,25 @@
 
 /* MODO OSCURO */
 [data-theme="dark"] {
-  --bg-app:         #0F0E17;
-  --bg-card:        #1A1927;
-  --bg-card-alt:    #14131F;
-  --bg-sidebar:     #1A1927;
-  --bg-nav:         #0D0C1A;
-  --border:         #2E2C42;
-  --border-strong:  #3D3A57;
-  --text-main:      #F0EEF8;
-  --text-secondary: #C4C0D8;
-  --text-muted:     #8B879D;
-  --text-light:     #5A5770;
+  --bg-app:         #07131F;
+  --bg-card:        #0D2133;
+  --bg-card-alt:    #0A1B2A;
+  --bg-sidebar:     #0D2133;
+  --bg-nav:         #04101A;
+  --border:         #1A3247;
+  --border-strong:  #274A66;
+  --text-main:      #E2EEF6;
+  --text-secondary: #A6C1D4;
+  --text-muted:     #63819A;
+  --text-light:     #3A5670;
 
-  --primary-light:  rgba(91,33,182,0.22);
+  --primary-light:  rgba(3,105,161,0.22);
   --ok-light:       rgba(4,120,87,0.2);
   --danger-light:   rgba(190,18,60,0.2);
   --warn-light:     rgba(146,64,14,0.2);
-  --accent-light:   rgba(217,119,6,0.2);
-  --ch-meta-light:  rgba(155,29,106,0.2);
-  --ch-google-light:rgba(29,78,216,0.2);
+  --accent-light:   rgba(15,118,110,0.2);
+  --ch-meta-light:  rgba(67,56,202,0.2);
+  --ch-google-light:rgba(14,116,144,0.2);
 
   --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
   --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);

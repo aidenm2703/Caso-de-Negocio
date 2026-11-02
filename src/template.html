@@ -17,7 +17,7 @@
   <div id="login-overlay" class="login-overlay">
     <div class="login-modal">
       <div class="login-header">
-        <div class="login-header-logo">SDC</div>
+        <div class="login-header-logo">SC</div>
         <h2>Sol de Casa</h2>
         <p>Portal Financiero y Motor de Simulación Solar</p>
       </div>
@@ -39,7 +39,7 @@
             <label class="login-label" for="login-password">Contraseña</label>
             <div class="login-input-wrapper">
               <input type="password" id="login-password" class="login-input" placeholder="••••••••" required autocomplete="current-password">
-              <button type="button" class="login-toggle-pwd" onclick="togglePasswordVisibility()" title="Mostrar/ocultar contraseña">Ver</button>
+              <button type="button" class="login-toggle-pwd" onclick="togglePasswordVisibility()" aria-label="Mostrar contraseña" title="Mostrar/ocultar contraseña"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.3-7 10-7 10 7 10 7-3.3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
             </div>
           </div>
 
@@ -68,7 +68,7 @@
             <!-- Usuario 1: Andrés -->
             <div class="demo-user-card" onclick="quickLogin('andres@soldecasa.com', 'admin123')">
               <div class="demo-user-header">
-                <div class="demo-user-avatar" style="background:#E1306C;">AV</div>
+                <div class="demo-user-avatar" style="background:#4338CA;">AV</div>
                 <div>
                   <div class="demo-user-name">Andrés Villalobos</div>
                   <div class="demo-user-role">Director General (CEO)</div>
@@ -83,7 +83,7 @@
             <!-- Usuario 2: Sofía -->
             <div class="demo-user-card" onclick="quickLogin('sofia@soldecasa.com', 'cfo2024')">
               <div class="demo-user-header">
-                <div class="demo-user-avatar" style="background:#2E9E68;">SM</div>
+                <div class="demo-user-avatar" style="background:#047857;">SM</div>
                 <div>
                   <div class="demo-user-name">Sofía Mendoza</div>
                   <div class="demo-user-role">Directora Financiera (CFO)</div>
@@ -98,7 +98,7 @@
             <!-- Usuario 3: Carlos -->
             <div class="demo-user-card" onclick="quickLogin('carlos@soldecasa.com', 'ops2024')">
               <div class="demo-user-header">
-                <div class="demo-user-avatar" style="background:#1A73E8;">CN</div>
+                <div class="demo-user-avatar" style="background:#0E7490;">CN</div>
                 <div>
                   <div class="demo-user-name">Carlos Navarro</div>
                   <div class="demo-user-role">Jefe de Operaciones (COO)</div>
@@ -113,7 +113,7 @@
             <!-- Usuario 4: Laura -->
             <div class="demo-user-card" onclick="quickLogin('laura@soldecasa.com', 'growth2024')">
               <div class="demo-user-header">
-                <div class="demo-user-avatar" style="background:#F59E0B;">LR</div>
+                <div class="demo-user-avatar" style="background:#0F766E;">LR</div>
                 <div>
                   <div class="demo-user-name">Laura Restrepo</div>
                   <div class="demo-user-role">Líder Comercial & Growth</div>
@@ -130,6 +130,8 @@
     </div>
   </div>
 
+  <div id="app-root" aria-live="polite"></div>
+  <template id="authenticated-app-template">
   <!-- ==========================================
        HEADER PRINCIPAL
        ========================================== -->
@@ -166,12 +168,13 @@
        BARRA DE NAVEGACIÓN DE PESTAÑAS
        ========================================== -->
   <nav class="tabs-nav no-print">
-    <button class="tab-btn active" id="tab-nav-resumen" data-target="tab-resumen" onclick="switchTab('tab-resumen')">📑 Resumen Ejecutivo</button>
-    <button class="tab-btn" id="tab-nav-tablero" data-target="tab-tablero" onclick="switchTab('tab-tablero')">🎛️ Tablero Interactivo</button>
-    <button class="tab-btn" id="tab-nav-simulador" data-target="tab-simulador" onclick="switchTab('tab-simulador')">📈 Simulador 24 Meses</button>
-    <button class="tab-btn" id="tab-nav-preguntas" data-target="tab-preguntas" onclick="switchTab('tab-preguntas')">❓ Respuestas Caso (1-7)</button>
-    <button class="tab-btn" id="tab-nav-extras" data-target="tab-extras" onclick="switchTab('tab-extras')">⚡ Extras & Estrategia</button>
-    <button class="tab-btn" id="tab-nav-auditoria" data-target="tab-auditoria" onclick="switchTab('tab-auditoria')">🔍 Auditoría & Errores IA</button>
+    <button class="tab-btn active" id="tab-nav-resumen" data-target="tab-resumen">📑 Resumen Ejecutivo</button>
+    <button class="tab-btn" id="tab-nav-tablero" data-target="tab-tablero">🎛️ Tablero Interactivo</button>
+    <button class="tab-btn" id="tab-nav-simulador" data-target="tab-simulador">📈 Simulador 24 Meses</button>
+    <button class="tab-btn" id="tab-nav-preguntas" data-target="tab-preguntas">❓ Respuestas Caso (1-7)</button>
+    <button class="tab-btn" id="tab-nav-extras" data-target="tab-extras">⚡ Extras & Estrategia</button>
+    <button class="tab-btn" id="tab-nav-auditoria" data-target="tab-auditoria">🔍 Auditoría & Errores IA</button>
+    <button class="tab-btn" id="tab-nav-casos" data-target="tab-casos">◫ Analizar casos</button>
   </nav>
 
   <!-- ==========================================
@@ -973,7 +976,14 @@
         </div>
       </div>
     </section>
+
+    <section id="tab-casos" class="tab-pane" style="display:none;">
+      <div id="case-analysis-workspace"></div>
+    </section>
   </main>
+  </template>
+
+  <footer class="login-footer">Sol de Casa · Portal Financiero · Caso C</footer>
 
   <!-- ==========================================
        INYECCIÓN DEL MOTOR JS COMPLETO

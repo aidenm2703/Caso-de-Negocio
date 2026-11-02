@@ -1,5 +1,13 @@
 # SOL DE CASA — Portal Financiero y Simulador Estratégico (Caso C)
 
+## Estructura modular y análisis de otros casos
+
+La fuente del HTML entregable está en `src/`. Se organiza por `routes/`, `pages/`, `components/`, `services/`, `context/`, `data/`, `model/` y `styles/`. `npm run build` empaqueta esos módulos en `dist/sol-de-casa.html`.
+
+La ruta **Analizar casos** permite ingresar más casos con su propia fuente, inversión, leads, conversiones, capacidad y costos. El motor muestra una vista previa en vivo, compara los casos guardados y conserva sus entradas localmente en el navegador. No rellena tasas faltantes con las de Sol de Casa. Consulta [el contexto funcional](src/context/contexto.md) para ver las reglas y los límites de ese análisis.
+
+Para analizar otro caso real, agrega al workspace el documento fuente y captura los datos de ahí. `CASO.md`, citado por un contexto previo como documento oficial, no está en el workspace actual.
+
 ## Estructura del Proyecto
 
 ```

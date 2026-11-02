@@ -56,7 +56,7 @@ body {
   font-size: 0.95rem;
   color: #fff;
   letter-spacing: -0.5px;
-  box-shadow: 0 2px 8px rgba(91,33,182,0.35);
+  box-shadow: 0 2px 8px rgba(3,105,161,0.32);
   font-family: var(--font-display);
   flex-shrink: 0;
 }

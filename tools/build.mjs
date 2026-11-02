@@ -20,12 +20,14 @@ const themeCss = fs.readFileSync(path.join(rootDir, 'src/styles/theme.css'), 'ut
 const layoutCss = fs.readFileSync(path.join(rootDir, 'src/styles/layout.css'), 'utf-8');
 const componentsCss = fs.readFileSync(path.join(rootDir, 'src/styles/components.css'), 'utf-8');
 const printCss = fs.readFileSync(path.join(rootDir, 'src/styles/print.css'), 'utf-8');
+const loginCss = fs.readFileSync(path.join(rootDir, 'src/styles/login.css'), 'utf-8');
 
 const combinedCss = `
 ${themeCss}
 ${layoutCss}
 ${componentsCss}
 ${printCss}
+${loginCss}
 `;
 
 // 2. Leer código fuente modular
@@ -39,6 +41,13 @@ const plansJs = fs.readFileSync(path.join(rootDir, 'src/model/plans.js'), 'utf-8
 const optimizerJs = fs.readFileSync(path.join(rootDir, 'src/model/optimizer.js'), 'utf-8');
 const sensitivityJs = fs.readFileSync(path.join(rootDir, 'src/model/sensitivity.js'), 'utf-8');
 const stressJs = fs.readFileSync(path.join(rootDir, 'src/model/stress.js'), 'utf-8');
+const appContextJs = fs.readFileSync(path.join(rootDir, 'src/context/appContext.js'), 'utf-8');
+const routesJs = fs.readFileSync(path.join(rootDir, 'src/routes/routes.js'), 'utf-8');
+const caseServiceJs = fs.readFileSync(path.join(rootDir, 'src/services/caseService.js'), 'utf-8');
+const dashboardServiceJs = fs.readFileSync(path.join(rootDir, 'src/services/dashboardService.js'), 'utf-8');
+const caseComponentsJs = fs.readFileSync(path.join(rootDir, 'src/components/caseComponents.js'), 'utf-8');
+const casesPageJs = fs.readFileSync(path.join(rootDir, 'src/pages/casesPage.js'), 'utf-8');
+const portalPageJs = fs.readFileSync(path.join(rootDir, 'src/pages/portalPage.js'), 'utf-8');
 const appClientJs = fs.readFileSync(path.join(rootDir, 'src/ui/appClient.js'), 'utf-8');
 
 // Eliminar imports y exports ES6 para que se ejecuten dentro de un solo script en el navegador
@@ -82,6 +91,13 @@ ${cleanedPlans}
 ${cleanedOptimizer}
 ${cleanedSensitivity}
 ${cleanedStress}
+${stripModules(appContextJs)}
+${stripModules(routesJs)}
+${stripModules(caseServiceJs)}
+${stripModules(dashboardServiceJs)}
+${stripModules(caseComponentsJs)}
+${stripModules(casesPageJs)}
+${stripModules(portalPageJs)}
 ${cleanedAppClient}
 `;
 

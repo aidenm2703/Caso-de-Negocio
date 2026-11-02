@@ -18,10 +18,10 @@ const DEMO_USERS = {
     name: 'Andrés Villalobos',
     role: 'Director General (CEO)',
     avatar: 'AV',
-    avatarBg: '#E1306C',
+    avatarBg: '#1E3A5F',
     badge: 'Dirección Estratégica',
     targetTab: 'tab-resumen',
-    actionBtnText: 'Revisar Memorando Leadly ➔',
+    actionBtnText: 'Revisar Memorando Leadly',
     welcomeMsg: 'Andrés: El memorando ejecutivo recomienda firmemente RECHAZAR la oferta de Leadly para proteger el margen y evitar destruir 4,86 ventas mensuales (−21,8%). El Plan Propio Ganador genera $214.980 en caja.',
   },
   sofia: {
@@ -31,10 +31,10 @@ const DEMO_USERS = {
     name: 'Sofía Mendoza',
     role: 'Directora Financiera (CFO)',
     avatar: 'SM',
-    avatarBg: '#2E9E68',
+    avatarBg: '#047857',
     badge: 'Tesorería y Riesgo',
     targetTab: 'tab-simulador',
-    actionBtnText: 'Auditar Flujo 24 Meses ➔',
+    actionBtnText: 'Auditar Flujo 24 Meses',
     welcomeMsg: 'Sofía: El saldo de caja al Mes 1 arranca en $15.736,30 y el piso innegociable de $5.000 está 100% blindado en todos los 24 meses del Plan Ganador. Pruebas de estrés bancarias validadas.',
   },
   carlos: {
@@ -44,10 +44,10 @@ const DEMO_USERS = {
     name: 'Carlos Navarro',
     role: 'Jefe de Operaciones (COO)',
     avatar: 'CN',
-    avatarBg: '#1A73E8',
+    avatarBg: '#1E3A5F',
     badge: 'Operaciones y Capacidad',
     targetTab: 'tab-tablero',
-    actionBtnText: 'Gestionar Capacidad de Visitas ➔',
+    actionBtnText: 'Gestionar Capacidad de Visitas',
     welcomeMsg: 'Carlos: El equipo actual de 2 técnicos rinde al 97.5% de utilización (97.5 de 100 visitas). Contratar 1 técnico extra en Mes 2 ampliará el techo a 150 visitas desde Mes 3.',
   },
   laura: {
@@ -57,10 +57,10 @@ const DEMO_USERS = {
     name: 'Laura Restrepo',
     role: 'Líder Comercial & Growth',
     avatar: 'LR',
-    avatarBg: '#F59E0B',
+    avatarBg: '#6B7280',
     badge: 'Adquisición y Canales',
     targetTab: 'tab-extras',
-    actionBtnText: 'Ver Rendimiento Marginal ➔',
+    actionBtnText: 'Ver Rendimiento Marginal',
     welcomeMsg: 'Laura: El Supuesto 7 (filtro previo + respuesta en < 5 min) dispara la tasa de cierre en Meta al 22% y el valor neto por visita a más de $310. Google satura a los $8.000 (160 leads).',
   },
   invitado: {
@@ -70,18 +70,19 @@ const DEMO_USERS = {
     name: 'Invitado Ejecutivo',
     role: 'Modo Auditoría / Lectura',
     avatar: 'IE',
-    avatarBg: '#64748B',
+    avatarBg: '#6B7280',
     badge: 'Modo Lectura',
     targetTab: 'tab-resumen',
-    actionBtnText: 'Explorar Resumen Ejecutivo ➔',
+    actionBtnText: 'Explorar Resumen Ejecutivo',
     welcomeMsg: 'Sesión activa en modo invitado. Puedes interactuar con los simuladores, calibrar parámetros, probar escenarios de estrés y revisar los cálculos auditados paso a paso.',
   },
 };
 
 export default function App() {
+  const [rememberSession, setRememberSession] = useState(() => localStorage.getItem('solDeCasa_remember') === 'true');
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const saved = localStorage.getItem('solDeCasa_user');
+      const saved = localStorage.getItem('solDeCasa_remember') === 'true' ? localStorage.getItem('solDeCasa_user') : null;
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
@@ -195,7 +196,8 @@ export default function App() {
     }
     if (matched) {
       setCurrentUser(matched);
-      localStorage.setItem('solDeCasa_user', JSON.stringify(matched));
+      if (rememberSession) localStorage.setItem('solDeCasa_user', JSON.stringify(matched));
+      else localStorage.removeItem('solDeCasa_user');
       setLoginError('');
       if (matched.targetTab) setCurrentTab(matched.targetTab);
     } else {
@@ -250,7 +252,7 @@ export default function App() {
                 evaluation.funnel.meta.visitsDone,
                 evaluation.funnel.meta.sales,
               ],
-              backgroundColor: '#E1306C',
+              backgroundColor: '#475569',
             },
             {
               label: 'Google Ads',
@@ -261,7 +263,7 @@ export default function App() {
                 evaluation.funnel.google.visitsDone,
                 evaluation.funnel.google.sales,
               ],
-              backgroundColor: '#1A73E8',
+              backgroundColor: '#1E3A5F',
             },
           ],
         },
@@ -283,9 +285,9 @@ export default function App() {
         data: {
           labels: ['Meta Ads', 'Google Ads'],
           datasets: [
-            { label: 'CPL (Costo por Lead)', data: [evaluation.meta.cpl, evaluation.google.cpl], backgroundColor: '#F59E0B' },
-            { label: 'CAC de Anuncios', data: [evaluation.meta.adCac, evaluation.google.adCac], backgroundColor: '#FFC531' },
-            { label: 'CAC Real (+Visitas)', data: [evaluation.meta.realCac, evaluation.google.realCac], backgroundColor: '#2E9E68' },
+            { label: 'CPL (Costo por Lead)', data: [evaluation.meta.cpl, evaluation.google.cpl], backgroundColor: '#6B7280' },
+            { label: 'CAC de Anuncios', data: [evaluation.meta.adCac, evaluation.google.adCac], backgroundColor: '#1E3A5F' },
+            { label: 'CAC Real (+Visitas)', data: [evaluation.meta.realCac, evaluation.google.realCac], backgroundColor: '#047857' },
           ],
         },
         options: {
@@ -306,9 +308,9 @@ export default function App() {
         data: {
           labels: ['Visitas Pedidas vs Capacidad'],
           datasets: [
-            { label: 'Visitas Hechas Google (Prioridad 1)', data: [evaluation.funnel.google.visitsDone], backgroundColor: '#1A73E8', stack: 'Stack 0' },
-            { label: 'Visitas Hechas Meta (Prioridad 2)', data: [evaluation.funnel.meta.visitsDone], backgroundColor: '#E1306C', stack: 'Stack 0' },
-            { label: 'Visitas Perdidas por Exceso', data: [evaluation.funnel.total.visitsLost], backgroundColor: '#EF4444', stack: 'Stack 0' },
+            { label: 'Visitas Hechas Google (Prioridad 1)', data: [evaluation.funnel.google.visitsDone], backgroundColor: '#1E3A5F', stack: 'Stack 0' },
+            { label: 'Visitas Hechas Meta (Prioridad 2)', data: [evaluation.funnel.meta.visitsDone], backgroundColor: '#475569', stack: 'Stack 0' },
+            { label: 'Visitas Perdidas por Exceso', data: [evaluation.funnel.total.visitsLost], backgroundColor: '#B91C1C', stack: 'Stack 0' },
           ],
         },
         options: {
@@ -335,8 +337,8 @@ export default function App() {
             {
               label: 'Saldo de Caja Final ($)',
               data: sim.months.map(m => m.endingCash),
-              borderColor: '#FFC531',
-              backgroundColor: 'rgba(255, 197, 49, 0.15)',
+              borderColor: '#1E3A5F',
+              backgroundColor: 'rgba(3, 105, 161, 0.15)',
               borderWidth: 3,
               fill: true,
               tension: 0.2,
@@ -344,7 +346,7 @@ export default function App() {
             {
               label: 'Piso de Seguridad ($5.000)',
               data: Array(24).fill(5000),
-              borderColor: '#DC2626',
+              borderColor: '#B91C1C',
               borderWidth: 2,
               borderDash: [6, 6],
               pointRadius: 0,
@@ -374,8 +376,8 @@ export default function App() {
             {
               label: 'Oscilación en CAC Real ($)',
               data: dataTornado.tornado.map(t => t.swing),
-              backgroundColor: '#FFC531',
-              borderColor: '#E5AD23',
+              backgroundColor: '#1E3A5F',
+              borderColor: '#152A47',
               borderWidth: 1,
             },
           ],
@@ -444,140 +446,65 @@ export default function App() {
   const monthlyPayment = (creditAmount * (monthlyRate * Math.pow(1 + monthlyRate, creditTerm))) / (Math.pow(1 + monthlyRate, creditTerm) - 1);
   const totalInterest = (monthlyPayment * creditTerm) - creditAmount;
 
-  return (
-    <div>
-      {/* LOGIN OVERLAY */}
-      {!currentUser && (
-        <div className="login-overlay">
-          <div className="login-modal">
-            <div className="login-header">
-              <div className="login-header-logo">☀️</div>
-              <h2>Sol de Casa</h2>
-              <p>Sistema de Inteligencia Financiera y Simulación Solar</p>
+  if (!currentUser) return (
+    <main className="login-screen">
+      <section className="login-card" aria-labelledby="login-title">
+        <header className="login-header">
+          <div className="login-header-logo" aria-hidden="true">SC</div>
+          <h2 id="login-title">Sol de Casa</h2>
+          <span className="login-title-rule" />
+          <p>Sistema de Inteligencia Financiera y Simulación Solar</p>
+        </header>
+        <div className="login-body">
+          {loginError && <div className="login-error-msg" role="alert">{loginError}</div>}
+          <form onSubmit={(e) => { e.preventDefault(); handleLogin(loginUser, loginPass); }}>
+            <div className="login-form-group">
+              <label className="login-label" htmlFor="login-user">Usuario o Correo Corporativo</label>
+              <input id="login-user" type="text" className="login-input" placeholder="ej. andres@soldecasa.com" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} required />
             </div>
-
-            <div className="login-body">
-              {loginError && <div className="login-error-msg" style={{ display: 'block' }}>{loginError}</div>}
-
-              <form onSubmit={(e) => { e.preventDefault(); handleLogin(loginUser, loginPass); }}>
-                <div className="login-form-group">
-                  <label className="login-label">Usuario o Correo Corporativo</label>
-                  <div className="login-input-wrapper">
-                    <input
-                      type="text"
-                      className="login-input"
-                      placeholder="ej. andres@soldecasa.com"
-                      value={loginUser}
-                      onChange={(e) => setLoginUser(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="login-form-group">
-                  <label className="login-label">Contraseña</label>
-                  <div className="login-input-wrapper">
-                    <input
-                      type={showPass ? 'text' : 'password'}
-                      className="login-input"
-                      placeholder="••••••••"
-                      value={loginPass}
-                      onChange={(e) => setLoginPass(e.target.value)}
-                      required
-                    />
-                    <button type="button" className="login-toggle-pwd" onClick={() => setShowPass(!showPass)}>👁️</button>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', fontSize: '0.8rem' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
-                    <input type="checkbox" defaultChecked /> Recordar mi sesión
-                  </label>
-                  <button type="button" onClick={() => handleLogin('invitado', '')} style={{ background: 'none', border: 'none', color: 'var(--channel-google)', cursor: 'pointer', fontWeight: 700 }}>
-                    Explorar como Invitado →
-                  </button>
-                </div>
-
-                <button type="submit" className="login-submit-btn">
-                  <span>Iniciar Sesión en el Portal</span> ➔
+            <div className="login-form-group">
+              <label className="login-label" htmlFor="login-password">Contraseña</label>
+              <div className="login-input-wrapper">
+                <input id="login-password" type={showPass ? 'text' : 'password'} className="login-input" placeholder="••••••••" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} required />
+                <button type="button" className="login-toggle-pwd" aria-label={showPass ? 'Ocultar contraseña' : 'Mostrar contraseña'} onClick={() => setShowPass(!showPass)}>
+                  <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    {showPass ? <><path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c5 0 8.3 4.5 9 7-.3 1.1-1.2 2.5-2.5 3.7"/><path d="M6.2 6.2C4.1 7.5 2.5 9.7 2 12c.7 2.5 4 7 10 7 1 0 1.9-.2 2.8-.5"/></> : <><path d="M2 12s3.3-7 10-7 10 7 10 7-3.3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></>}
+                  </svg>
                 </button>
-              </form>
-
-              {/* DEMO CREDENTIALS BOX */}
-              <div className="demo-creds-container">
-                <div className="demo-creds-title">
-                  <span>Credenciales de Prueba (Haz clic para entrar)</span>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--accent-green)', fontWeight: 'bold' }}>1-CLIC DISPONIBLE</span>
-                </div>
-
-                <div className="demo-creds-grid">
-                  <div className="demo-user-card" onClick={() => handleLogin('andres@soldecasa.com', 'admin123')}>
-                    <div className="demo-user-header">
-                      <div className="demo-user-avatar" style={{ background: '#E1306C' }}>AV</div>
-                      <div>
-                        <div className="demo-user-name">Andrés Villalobos</div>
-                        <div className="demo-user-role">Director General (CEO)</div>
-                      </div>
-                    </div>
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                      <code>andres@soldecasa.com</code> / <code>admin123</code>
-                    </div>
-                    <div className="demo-user-quick-btn">⚡ Entrar como Andrés</div>
-                  </div>
-
-                  <div className="demo-user-card" onClick={() => handleLogin('sofia@soldecasa.com', 'cfo2024')}>
-                    <div className="demo-user-header">
-                      <div className="demo-user-avatar" style={{ background: '#2E9E68' }}>SM</div>
-                      <div>
-                        <div className="demo-user-name">Sofía Mendoza</div>
-                        <div className="demo-user-role">Directora Financiera (CFO)</div>
-                      </div>
-                    </div>
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                      <code>sofia@soldecasa.com</code> / <code>cfo2024</code>
-                    </div>
-                    <div className="demo-user-quick-btn">⚡ Entrar como Sofía</div>
-                  </div>
-
-                  <div className="demo-user-card" onClick={() => handleLogin('carlos@soldecasa.com', 'ops2024')}>
-                    <div className="demo-user-header">
-                      <div className="demo-user-avatar" style={{ background: '#1A73E8' }}>CN</div>
-                      <div>
-                        <div className="demo-user-name">Carlos Navarro</div>
-                        <div className="demo-user-role">Jefe de Operaciones (COO)</div>
-                      </div>
-                    </div>
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                      <code>carlos@soldecasa.com</code> / <code>ops2024</code>
-                    </div>
-                    <div className="demo-user-quick-btn">⚡ Entrar como Carlos</div>
-                  </div>
-
-                  <div className="demo-user-card" onClick={() => handleLogin('laura@soldecasa.com', 'growth2024')}>
-                    <div className="demo-user-header">
-                      <div className="demo-user-avatar" style={{ background: '#F59E0B' }}>LR</div>
-                      <div>
-                        <div className="demo-user-name">Laura Restrepo</div>
-                        <div className="demo-user-role">Líder Comercial & Growth</div>
-                      </div>
-                    </div>
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                      <code>laura@soldecasa.com</code> / <code>growth2024</code>
-                    </div>
-                    <div className="demo-user-quick-btn">⚡ Entrar como Laura</div>
-                  </div>
-                </div>
               </div>
+            </div>
+            <div className="login-options">
+              <label><input type="checkbox" checked={rememberSession} onChange={(e) => { setRememberSession(e.target.checked); localStorage.setItem('solDeCasa_remember', String(e.target.checked)); if (!e.target.checked) localStorage.removeItem('solDeCasa_user'); }} /> Recordar mi sesión</label>
+              <button type="button" className="guest-link" onClick={() => handleLogin('invitado', '')}>Explorar como Invitado <span aria-hidden="true">→</span></button>
+            </div>
+            <button type="submit" className="login-submit-btn">Iniciar Sesión en el Portal</button>
+          </form>
+          <div className="demo-creds-container">
+            <div className="demo-creds-title"><span>Credenciales de prueba</span><span className="demo-hint">Clic para entrar</span></div>
+            <div className="demo-creds-grid">
+              {Object.entries(DEMO_USERS).filter(([key]) => key !== 'invitado').map(([key, user]) => (
+                <button type="button" className="demo-user-card" key={key} onClick={() => handleLogin(user.username, user.password)}>
+                  <span className="demo-user-avatar" style={{ background: user.avatarBg }}>{user.avatar}</span>
+                  <span className="demo-user-copy"><span className="demo-user-name">{user.name}</span><span className="demo-user-role">{user.role}</span></span>
+                  <span className="demo-chevron" aria-hidden="true">›</span>
+                  <span className="demo-user-credentials">{user.username} · {user.password}</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>
-      )}
+      </section>
+      <footer className="login-footer">Sol de Casa · Portal Financiero · Caso C</footer>
+    </main>
+  );
 
+  return (
+    <div>
       {/* HEADER */}
       <header className="app-header">
         <div className="header-container">
           <div className="brand-section">
-            <div className="brand-logo">☀️</div>
+            <div className="brand-logo">SC</div>
             <div>
               <h1 className="brand-title">Sol de Casa</h1>
               <p className="brand-subtitle">Portal Financiero y Simulador Estratégico | Caso C</p>
@@ -592,25 +519,25 @@ export default function App() {
                   <div className="header-user-name">{currentUser.name}</div>
                   <div className="header-user-role">{currentUser.role}</div>
                 </div>
-                <button className="btn-logout" onClick={handleLogout} title="Cerrar Sesión">🚪 Salir</button>
+                <button className="btn-logout" onClick={handleLogout} title="Cerrar Sesión">Salir</button>
               </div>
             )}
             <button className="btn btn-secondary" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-              {theme === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Oscuro'}
+              {theme === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}
             </button>
-            <button className="btn btn-primary no-print" onClick={() => window.print()}>🖨️ Imprimir</button>
+            <button className="btn btn-primary no-print" onClick={() => window.print()}>Imprimir</button>
           </div>
         </div>
       </header>
 
       {/* NAVIGATION TABS */}
       <nav className="tabs-nav no-print">
-        <button className={`tab-btn ${currentTab === 'tab-resumen' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-resumen')}>📑 Resumen Ejecutivo</button>
-        <button className={`tab-btn ${currentTab === 'tab-tablero' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-tablero')}>🎛️ Tablero Interactivo</button>
-        <button className={`tab-btn ${currentTab === 'tab-simulador' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-simulador')}>📈 Simulador 24 Meses</button>
-        <button className={`tab-btn ${currentTab === 'tab-preguntas' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-preguntas')}>❓ Respuestas Caso (1-7)</button>
-        <button className={`tab-btn ${currentTab === 'tab-extras' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-extras')}>⚡ Extras & Estrategia</button>
-        <button className={`tab-btn ${currentTab === 'tab-auditoria' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-auditoria')}>🔍 Auditoría & Errores IA</button>
+        <button className={`tab-btn ${currentTab === 'tab-resumen' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-resumen')}>Resumen Ejecutivo</button>
+        <button className={`tab-btn ${currentTab === 'tab-tablero' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-tablero')}>Tablero Interactivo</button>
+        <button className={`tab-btn ${currentTab === 'tab-simulador' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-simulador')}>Simulador 24 Meses</button>
+        <button className={`tab-btn ${currentTab === 'tab-preguntas' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-preguntas')}>Respuestas Caso (1-7)</button>
+        <button className={`tab-btn ${currentTab === 'tab-extras' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-extras')}>Extras & Estrategia</button>
+        <button className={`tab-btn ${currentTab === 'tab-auditoria' ? 'active' : ''}`} onClick={() => setCurrentTab('tab-auditoria')}>Auditoría & Errores IA</button>
       </nav>
 
       {/* MAIN CONTAINER */}
@@ -640,14 +567,14 @@ export default function App() {
         <div className="export-bar no-print">
           <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.5rem' }}>Exportar y Datos:</span>
           <button className="btn-export" onClick={() => downloadFile('sol-de-casa-informe.md', '# Informe Ejecutivo Sol de Casa\n...', 'text/markdown')}>
-            📝 Descargar Informe (.md)
+            Descargar Informe (.md)
           </button>
           <button className="btn-export" onClick={() => {
             let csv = 'Mes,Meta,Google,Total,Leads,Visitas,Ventas,Caja Final\n';
             sim.months.forEach(m => { csv += `${m.month},${m.metaSpend},${m.googleSpend},${m.totalSpend},${m.leads},${m.visitsDone.toFixed(1)},${m.sales.toFixed(2)},${m.endingCash.toFixed(2)}\n`; });
             downloadFile('sol-de-casa-flujo-24m.csv', csv, 'text/csv');
           }}>
-            📊 Descargar Flujo 24M (.csv)
+            Descargar Flujo 24M (.csv)
           </button>
           <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Escenarios rápidos:</span>
@@ -661,7 +588,7 @@ export default function App() {
         {currentTab === 'tab-resumen' && (
           <section className="tab-pane print-page">
             <div className="trap-banner">
-              <div className="trap-icon">⚠️</div>
+              <div className="trap-icon">!</div>
               <div className="trap-content">
                 <h3>LA TRAMPA DEL CASO DETECTADA</h3>
                 <p className="trap-formula">
@@ -700,7 +627,7 @@ export default function App() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                   <h3 style={{ fontSize: '1rem', fontWeight: 800 }}>Panel de Parámetros</h3>
                   <button className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} onClick={() => applyPreset('hoy')}>
-                    ↺ Restaurar Caso
+                    Restaurar Caso
                   </button>
                 </div>
 
@@ -884,7 +811,7 @@ export default function App() {
                   </thead>
                   <tbody>
                     {comparisonPlans.plans.map(p => (
-                      <tr key={p.id} style={p.isWinner ? { background: 'rgba(46, 158, 104, 0.12)', fontWeight: 'bold' } : {}}>
+                      <tr key={p.id} style={p.isWinner ? { background: 'rgba(4, 120, 87, 0.12)', fontWeight: 'bold' } : {}}>
                         <td>
                           <strong>{p.name}</strong>
                           {p.isWinner && <span className="badge badge-green" style={{ marginLeft: '0.5rem' }}>👑 GANADOR</span>}
@@ -966,10 +893,10 @@ export default function App() {
                       <tr key={i.range}>
                         <td><strong>{i.range}</strong></td>
                         <td>{formatCurrency(i.deltaSpend)}</td>
-                        <td style={{ color: '#E1306C', fontWeight: 600 }}>+{i.meta.extraLeads}</td>
-                        <td style={{ color: '#E1306C', fontWeight: 700 }}>{formatCurrency(i.meta.marginalCpl, 2)}</td>
-                        <td style={{ color: '#1A73E8', fontWeight: 600 }}>{isFinite(i.google.marginalCpl) ? `+${i.google.extraLeads}` : '0 (Saturado)'}</td>
-                        <td style={{ color: '#1A73E8', fontWeight: 700 }}>{isFinite(i.google.marginalCpl) ? formatCurrency(i.google.marginalCpl, 2) : 'Infinito'}</td>
+                        <td style={{ color: '#475569', fontWeight: 600 }}>+{i.meta.extraLeads}</td>
+                        <td style={{ color: '#475569', fontWeight: 700 }}>{formatCurrency(i.meta.marginalCpl, 2)}</td>
+                        <td style={{ color: '#1E3A5F', fontWeight: 600 }}>{isFinite(i.google.marginalCpl) ? `+${i.google.extraLeads}` : '0 (Saturado)'}</td>
+                        <td style={{ color: '#1E3A5F', fontWeight: 700 }}>{isFinite(i.google.marginalCpl) ? formatCurrency(i.google.marginalCpl, 2) : 'Infinito'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -985,9 +912,9 @@ export default function App() {
             <div className="chart-card">
               <h3 className="chart-title" style={{ marginBottom: '1rem' }}>Modo Presentación Ejecutiva con Cronómetro y Alerta Sonora</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
-                <button className="btn btn-primary" onClick={() => { setTimerSeconds(180); setTimerActive(true); }}>⏱️ Pitch 3 min (Decisión Andrés)</button>
-                <button className="btn btn-secondary" onClick={() => { setTimerSeconds(120); setTimerActive(true); }}>⏱️ Pitch 2 min (Crédito Banco)</button>
-                <button className="btn btn-secondary" onClick={() => { setTimerActive(false); setTimerSeconds(0); }}>⏹️ Detener</button>
+                <button className="btn btn-primary" onClick={() => { setTimerSeconds(180); setTimerActive(true); }}>Pitch 3 min (Decisión Andrés)</button>
+                <button className="btn btn-secondary" onClick={() => { setTimerSeconds(120); setTimerActive(true); }}>Pitch 2 min (Crédito Banco)</button>
+                <button className="btn btn-secondary" onClick={() => { setTimerActive(false); setTimerSeconds(0); }}>Detener</button>
                 <div style={{ fontSize: '1.75rem', fontWeight: 900, fontFamily: 'var(--font-mono)', color: 'var(--accent-red)' }}>
                   {Math.floor(timerSeconds / 60).toString().padStart(2, '0')}:{(timerSeconds % 60).toString().padStart(2, '0')}
                 </div>
@@ -1007,23 +934,23 @@ export default function App() {
               <div style={{ padding: '0.5rem 0' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.8rem', borderBottom: '1px solid var(--border-color)' }}>
                   <span>1. Contribución Unitaria por Venta = $1.625</span>
-                  <span className="badge badge-green">✔ PASÓ (OK)</span>
+                  <span className="badge badge-green">PASÓ (OK)</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.8rem', borderBottom: '1px solid var(--border-color)' }}>
                   <span>2. Interpolación de Leads Meta ($4k = 500 leads)</span>
-                  <span className="badge badge-green">✔ PASÓ (OK)</span>
+                  <span className="badge badge-green">PASÓ (OK)</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.8rem', borderBottom: '1px solid var(--border-color)' }}>
                   <span>3. CAC Real Hoy (Meta ≈ $718, Google ≈ $536)</span>
-                  <span className="badge badge-green">✔ PASÓ (OK)</span>
+                  <span className="badge badge-green">PASÓ (OK)</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.8rem', borderBottom: '1px solid var(--border-color)' }}>
                   <span>4. Auditoría Mes 1 Plan Actual = $15.736,30</span>
-                  <span className="badge badge-green">✔ PASÓ (OK)</span>
+                  <span className="badge badge-green">PASÓ (OK)</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.8rem', borderBottom: '1px solid var(--border-color)' }}>
                   <span>5. Plan Propio Ganador B supera $214.000 en Mes 24</span>
-                  <span className="badge badge-green">✔ PASÓ (OK)</span>
+                  <span className="badge badge-green">PASÓ (OK)</span>
                 </div>
               </div>
             </div>

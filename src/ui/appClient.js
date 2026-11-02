@@ -15,7 +15,7 @@ const DEMO_USERS = {
     name: 'Andrés Villalobos',
     role: 'Director General (CEO)',
     avatar: 'AV',
-    avatarBg: '#E1306C',
+    avatarBg: '#4338CA',
     badge: 'Dirección Estratégica',
     targetTab: 'tab-resumen',
     actionBtnText: 'Revisar Memorando Leadly ➔',
@@ -28,7 +28,7 @@ const DEMO_USERS = {
     name: 'Sofía Mendoza',
     role: 'Directora Financiera (CFO)',
     avatar: 'SM',
-    avatarBg: '#2E9E68',
+    avatarBg: '#047857',
     badge: 'Tesorería y Riesgo',
     targetTab: 'tab-simulador',
     actionBtnText: 'Auditar Flujo 24 Meses ➔',
@@ -41,7 +41,7 @@ const DEMO_USERS = {
     name: 'Carlos Navarro',
     role: 'Jefe de Operaciones (COO)',
     avatar: 'CN',
-    avatarBg: '#1A73E8',
+    avatarBg: '#0E7490',
     badge: 'Operaciones y Capacidad',
     targetTab: 'tab-tablero',
     actionBtnText: 'Gestionar Capacidad de Visitas ➔',
@@ -54,7 +54,7 @@ const DEMO_USERS = {
     name: 'Laura Restrepo',
     role: 'Líder Comercial & Growth',
     avatar: 'LR',
-    avatarBg: '#F59E0B',
+    avatarBg: '#0F766E',
     badge: 'Adquisición y Canales',
     targetTab: 'tab-extras',
     actionBtnText: 'Ver Rendimiento Marginal ➔',
@@ -67,7 +67,7 @@ const DEMO_USERS = {
     name: 'Invitado Ejecutivo',
     role: 'Modo Auditoría / Lectura',
     avatar: 'IE',
-    avatarBg: '#64748B',
+    avatarBg: '#5C7385',
     badge: 'Modo Lectura',
     targetTab: 'tab-resumen',
     actionBtnText: 'Explorar Resumen Ejecutivo ➔',
@@ -121,21 +121,21 @@ let timerSeconds = 0;
 // INICIALIZACIÓN AL CARGAR DOM
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('hashchange', () => {
+    if (appState.currentUser) window.switchTab(currentRoute().tabId, { fromHistory: true });
+  });
+  window.addEventListener('popstate', () => {
+    if (appState.currentUser) window.switchTab(currentRoute().tabId, { fromHistory: true });
+  });
   initAuth();
-  initTabs();
-  initThemeToggle();
-  initControls();
-  renderApp();
-  initPresentationTimers();
-  updateCreditSimulator();
-  runBrowserTests();
 });
 
 // ==========================================
 // SISTEMA DE AUTENTICACIÓN Y SESIÓN
 // ==========================================
 function initAuth() {
-  const savedUserJson = localStorage.getItem('solDeCasa_user');
+  let savedUserJson = null;
+  try { savedUserJson = localStorage.getItem('solDeCasa_user'); } catch {}
   if (savedUserJson) {
     try {
       const user = JSON.parse(savedUserJson);
@@ -172,9 +172,10 @@ window.handleLoginSubmit = function(event) {
   if (matchedUser) {
     if (errorEl) errorEl.style.display = 'none';
     const remember = document.getElementById('login-remember')?.checked;
-    if (remember) {
-      localStorage.setItem('solDeCasa_user', JSON.stringify(matchedUser));
-    }
+    try {
+      if (remember) localStorage.setItem('solDeCasa_user', JSON.stringify(matchedUser));
+      else localStorage.removeItem('solDeCasa_user');
+    } catch {}
     applyUserSession(matchedUser, true);
   } else {
     if (errorEl) {
@@ -194,7 +195,10 @@ window.quickLogin = function(username, password) {
   for (const key in DEMO_USERS) {
     const u = DEMO_USERS[key];
     if (u.aliases.includes(username.toLowerCase())) {
-      localStorage.setItem('solDeCasa_user', JSON.stringify(u));
+      try {
+        if (document.getElementById('login-remember')?.checked) localStorage.setItem('solDeCasa_user', JSON.stringify(u));
+        else localStorage.removeItem('solDeCasa_user');
+      } catch {}
       applyUserSession(u, true);
       break;
     }
@@ -203,31 +207,53 @@ window.quickLogin = function(username, password) {
 
 window.loginAsGuest = function() {
   const guest = DEMO_USERS.invitado;
+  try {
+    if (document.getElementById('login-remember')?.checked) localStorage.setItem('solDeCasa_user', JSON.stringify(guest));
+    else localStorage.removeItem('solDeCasa_user');
+  } catch {}
   applyUserSession(guest, true);
 };
 
 window.handleLogout = function() {
-  localStorage.removeItem('solDeCasa_user');
+  try { localStorage.removeItem('solDeCasa_user'); } catch {}
   appState.currentUser = null;
-
+  document.body.classList.remove('authenticated');
+  resetToCaseData();
+  clearInterval(timerInterval);
+  timerSeconds = 0;
+  [funnelChartInst, cacComparisonChartInst, capacityChartInst, cashFlowChartInst, tornadoChartInst].forEach(chart => chart?.destroy());
+  funnelChartInst = cacComparisonChartInst = capacityChartInst = cashFlowChartInst = tornadoChartInst = null;
+  appState.currentTab = 'tab-resumen';
+  appState.activePlanId = 'actual';
+  appState.customPlanSchedule = null;
+  const root = document.getElementById('app-root');
+  if (root) root.replaceChildren();
+  const loginForm = document.getElementById('login-form');
+  if (loginForm) loginForm.reset();
+  const error = document.getElementById('login-error');
+  if (error) error.style.display = 'none';
   const overlay = document.getElementById('login-overlay');
   if (overlay) overlay.classList.remove('hidden');
-
-  const widget = document.getElementById('header-user-widget');
-  if (widget) widget.style.display = 'none';
-
-  const banner = document.getElementById('greeting-banner');
-  if (banner) banner.style.display = 'none';
 };
 
 window.togglePasswordVisibility = function() {
   const pInput = document.getElementById('login-password');
   if (!pInput) return;
-  pInput.type = pInput.type === 'password' ? 'text' : 'password';
+  const button = document.querySelector('.login-toggle-pwd');
+  const showing = pInput.type === 'password';
+  pInput.type = showing ? 'text' : 'password';
+  if (button) {
+    button.setAttribute('aria-label', showing ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    button.innerHTML = showing
+      ? '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c5 0 8.3 4.5 9 7-.3 1.1-1.2 2.5-2.5 3.7"/><path d="M6.2 6.2C4.1 7.5 2.5 9.7 2 12c.7 2.5 4 7 10 7 1 0 1.9-.2 2.8-.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.3-7 10-7 10 7 10 7-3.3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  }
 };
 
 function applyUserSession(user, animateGreeting = false) {
+  mountDashboard();
   appState.currentUser = user;
+  document.body.classList.add('authenticated');
 
   // 1. Ocultar modal
   const overlay = document.getElementById('login-overlay');
@@ -279,12 +305,15 @@ function applyUserSession(user, animateGreeting = false) {
 // ==========================================
 // GESTIÓN DE PESTAÑAS (TABS)
 // ==========================================
-window.switchTab = function(targetId) {
+window.switchTab = function(targetId, routeOptions = {}) {
+  updateRoute(targetId, routeOptions);
   document.querySelectorAll('.tab-btn').forEach(b => {
     if (b.getAttribute('data-target') === targetId) {
       b.classList.add('active');
+      b.setAttribute('aria-current', 'page');
     } else {
       b.classList.remove('active');
+      b.removeAttribute('aria-current');
     }
   });
 
@@ -292,6 +321,8 @@ window.switchTab = function(targetId) {
   const targetPane = document.getElementById(targetId);
   if (targetPane) targetPane.style.display = 'block';
   appState.currentTab = targetId;
+
+  if (targetId === 'tab-casos') renderCasesPage();
 
   setTimeout(() => {
     if (targetId === 'tab-tablero') renderTableroCharts();
@@ -473,36 +504,7 @@ window.applyPresetScenario = function(presetKey) {
 // RENDERIZADO GLOBAL
 // ==========================================
 function renderApp() {
-  const capacity = 100 + (appState.extraTechs * 50);
-
-  const customMetaRates = {
-    contactRate: appState.metaContactRate,
-    scheduleRate: appState.metaScheduleRate,
-    visitCompletedRate: appState.metaVisitRate,
-    closeRate: appState.metaCloseRate,
-  };
-  const customGoogleRates = {
-    contactRate: appState.googleContactRate,
-    scheduleRate: appState.googleScheduleRate,
-    visitCompletedRate: appState.googleVisitRate,
-    closeRate: appState.googleCloseRate,
-  };
-
-  const funnelResult = calculateFunnel({
-    metaSpend: appState.metaSpend,
-    googleSpend: appState.googleSpend,
-    capacity,
-    applySupuesto7: appState.applySupuesto7,
-    customMetaRates,
-    customGoogleRates,
-  });
-
-  const evaluation = evaluateScenario(funnelResult, {
-    price: appState.price,
-    costPerVisit: appState.costPerVisit,
-    includeBattery: appState.includeBattery,
-    batteryAttachRate: appState.batteryAttachRate,
-  });
+  const { capacity, funnelResult, evaluation } = analyzeDashboardState(appState);
 
   renderTrapBanner(evaluation);
   renderKPIs(evaluation, capacity);
@@ -632,8 +634,8 @@ function renderTableroCharts(evaluation, capacity) {
       data: {
         labels: ['1. Leads', '2. Contactados', '3. Agendados', '4. Visitas Hechas', '5. Ventas'],
         datasets: [
-          { label: 'Meta Ads', data: dataMeta, backgroundColor: '#E1306C' },
-          { label: 'Google Ads', data: dataGoogle, backgroundColor: '#1A73E8' },
+          { label: 'Meta Ads', data: dataMeta, backgroundColor: '#4338CA' },
+          { label: 'Google Ads', data: dataGoogle, backgroundColor: '#0E7490' },
         ],
       },
       options: {
@@ -657,17 +659,17 @@ function renderTableroCharts(evaluation, capacity) {
           {
             label: 'CPL (Costo por Lead)',
             data: [evaluation.meta.cpl, evaluation.google.cpl],
-            backgroundColor: '#F59E0B',
+            backgroundColor: '#0F766E',
           },
           {
             label: 'CAC de Anuncios',
             data: [evaluation.meta.adCac, evaluation.google.adCac],
-            backgroundColor: '#FFC531',
+            backgroundColor: '#0369A1',
           },
           {
             label: 'CAC Real Total (+Visitas)',
             data: [evaluation.meta.realCac, evaluation.google.realCac],
-            backgroundColor: '#2E9E68',
+            backgroundColor: '#047857',
           },
         ],
       },
@@ -693,13 +695,13 @@ function renderTableroCharts(evaluation, capacity) {
           {
             label: 'Visitas Hechas Google (Prioridad 1)',
             data: [evaluation.funnel.google.visitsDone],
-            backgroundColor: '#1A73E8',
+            backgroundColor: '#0E7490',
             stack: 'Stack 0',
           },
           {
             label: 'Visitas Hechas Meta (Prioridad 2)',
             data: [evaluation.funnel.meta.visitsDone],
-            backgroundColor: '#E1306C',
+            backgroundColor: '#4338CA',
             stack: 'Stack 0',
           },
           {
@@ -772,7 +774,7 @@ function renderResultsTable(currentEval) {
       <td><strong>${name}</strong></td>
       <td style="text-align:right;">${s1}</td>
       <td style="text-align:right; color:#DC2626;">${s2}</td>
-      <td style="text-align:right; font-weight:bold; color:#2E9E68;">${s3}</td>
+      <td style="text-align:right; font-weight:bold; color:#047857;">${s3}</td>
     </tr>
   `).join('');
 }
@@ -798,9 +800,9 @@ function renderSimuladorTab() {
       <td style="text-align:right;">${m.capacity}</td>
       <td style="text-align:right;">${formatNumber(m.visitsDone, 1)}</td>
       <td style="text-align:right; font-weight:bold;">${formatNumber(m.sales, 2)}</td>
-      <td style="text-align:right; color:#2E9E68;">${formatCurrency(m.inflows.total, 2)}</td>
+      <td style="text-align:right; color:#047857;">${formatCurrency(m.inflows.total, 2)}</td>
       <td style="text-align:right; color:#DC2626;">${formatCurrency(m.outflows.total, 2)}</td>
-      <td style="text-align:right; font-weight:bold; color:${m.netCashFlow >= 0 ? '#2E9E68' : '#DC2626'};">
+      <td style="text-align:right; font-weight:bold; color:${m.netCashFlow >= 0 ? '#047857' : '#DC2626'};">
         ${formatCurrency(m.netCashFlow, 2)}
       </td>
       <td style="text-align:right; font-weight:800; font-size:0.95rem; color:${m.safetyFloorBreached ? '#DC2626' : 'var(--text-main)'};">
@@ -851,8 +853,8 @@ function renderCashCharts(simResult) {
           {
             label: 'Saldo de Caja Final ($)',
             data: sim.months.map(m => m.endingCash),
-            borderColor: '#FFC531',
-            backgroundColor: 'rgba(255, 197, 49, 0.15)',
+            borderColor: '#0369A1',
+            backgroundColor: 'rgba(3, 105, 161, 0.15)',
             borderWidth: 3,
             fill: true,
             tension: 0.2,
@@ -890,7 +892,7 @@ function renderPlansComparisonTable() {
   const comparison = compareAllPlans();
 
   container.innerHTML = comparison.plans.map(p => `
-    <tr style="${p.isWinner ? 'background: rgba(46, 158, 104, 0.12); font-weight:bold;' : ''}">
+    <tr style="${p.isWinner ? 'background: rgba(4, 120, 87, 0.12); font-weight:bold;' : ''}">
       <td>
         <strong>${p.name}</strong>
         ${p.isWinner ? '<span class="badge badge-green" style="margin-left:0.5rem;">👑 GANADOR</span>' : ''}
@@ -983,7 +985,7 @@ function renderExtrasTab(evaluation) {
             ? '<span class="badge badge-red">ROMPE PISO</span>' 
             : '<span class="badge badge-green">RESISTE</span>'}
         </td>
-        <td style="text-align:right; font-weight:bold; color:${s.creditNeeded > 0 ? '#DC2626' : '#2E9E68'};">
+        <td style="text-align:right; font-weight:bold; color:${s.creditNeeded > 0 ? '#DC2626' : '#047857'};">
           ${s.creditNeeded > 0 ? formatCurrency(s.creditNeeded, 2) : '$0'}
         </td>
       </tr>
@@ -1005,12 +1007,12 @@ function renderMarginalReturnsTable() {
       <tr>
         <td><strong>${item.range}</strong></td>
         <td style="text-align:right;">${formatCurrency(item.deltaSpend)}</td>
-        <td style="text-align:right; color:#E1306C; font-weight:600;">+${item.meta.extraLeads}</td>
-        <td style="text-align:right; color:#E1306C; font-weight:700;">${formatCurrency(item.meta.marginalCpl, 2)}</td>
-        <td style="text-align:right; color:#1A73E8; font-weight:600;">
+        <td style="text-align:right; color:#4338CA; font-weight:600;">+${item.meta.extraLeads}</td>
+        <td style="text-align:right; color:#4338CA; font-weight:700;">${formatCurrency(item.meta.marginalCpl, 2)}</td>
+        <td style="text-align:right; color:#0E7490; font-weight:600;">
           ${isGoogleSaturated ? '<span style="color:#DC2626;">0 (Saturado)</span>' : `+${item.google.extraLeads}`}
         </td>
-        <td style="text-align:right; color:#1A73E8; font-weight:700;">
+        <td style="text-align:right; color:#0E7490; font-weight:700;">
           ${isGoogleSaturated ? '<span style="color:#DC2626;">Infinito</span>' : formatCurrency(item.google.marginalCpl, 2)}
         </td>
         <td style="font-size:0.8rem; color:var(--text-muted);">
@@ -1077,8 +1079,8 @@ function renderTornadoChart() {
         {
           label: 'Oscilación en CAC Real ($)',
           data: dataTornado.tornado.map(t => t.swing),
-          backgroundColor: '#FFC531',
-          borderColor: '#E5AD23',
+          backgroundColor: '#0369A1',
+          borderColor: '#075985',
           borderWidth: 1,
         },
       ],
