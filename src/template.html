@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sol de Casa – Sistema Financiero, Tablero y Simulador Solar</title>
+  <!-- Chart.js 4.4.1 desde CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    /* STYLES_INJECTION */
+  </style>
+</head>
+<body>
+  <!-- ==========================================
+       MODAL DE AUTENTICACIÓN / LOGIN
+       ========================================== -->
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-modal">
+      <div class="login-header">
+        <div class="login-header-logo">SDC</div>
+        <h2>Sol de Casa</h2>
+        <p>Portal Financiero y Motor de Simulación Solar</p>
+      </div>
+
+      <div class="login-body">
+        <div id="login-error" class="login-error-msg">
+          Usuario o contraseña incorrectos. Revisa las credenciales de prueba abajo.
+        </div>
+
+        <form id="login-form" onsubmit="handleLoginSubmit(event)">
+          <div class="login-form-group">
+            <label class="login-label" for="login-username">Usuario o Correo Corporativo</label>
+            <div class="login-input-wrapper">
+              <input type="text" id="login-username" class="login-input" placeholder="ej. andres@soldecasa.com" required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="login-form-group">
+            <label class="login-label" for="login-password">Contraseña</label>
+            <div class="login-input-wrapper">
+              <input type="password" id="login-password" class="login-input" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="login-toggle-pwd" onclick="togglePasswordVisibility()" title="Mostrar/ocultar contraseña">Ver</button>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; font-size:0.8rem;">
+            <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+              <input type="checkbox" id="login-remember" checked> Recordar mi sesión
+            </label>
+            <button type="button" onclick="loginAsGuest()" style="background:none; border:none; color:var(--channel-google); cursor:pointer; font-weight:700;">
+              Explorar como Invitado →
+            </button>
+          </div>
+
+          <button type="submit" class="login-submit-btn">
+            <span>Acceder al Portal</span>
+          </button>
+        </form>
+
+        <!-- SECCIÓN DE CREDENCIALES DE PRUEBA -->
+        <div class="demo-creds-container">
+          <div class="demo-creds-title">
+            <span>Credenciales de prueba — clic directo</span>
+            <span style="font-size:0.68rem; color:var(--ok); font-weight:700; letter-spacing:0.3px;">Acceso rapido</span>
+          </div>
+
+          <div class="demo-creds-grid">
+            <!-- Usuario 1: Andrés -->
+            <div class="demo-user-card" onclick="quickLogin('andres@soldecasa.com', 'admin123')">
+              <div class="demo-user-header">
+                <div class="demo-user-avatar" style="background:#E1306C;">AV</div>
+                <div>
+                  <div class="demo-user-name">Andrés Villalobos</div>
+                  <div class="demo-user-role">Director General (CEO)</div>
+                </div>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                <code>andres@soldecasa.com</code> / <code>admin123</code>
+              </div>
+              <div class="demo-user-quick-btn">Entrar como Andrés</div>
+            </div>
+
+            <!-- Usuario 2: Sofía -->
+            <div class="demo-user-card" onclick="quickLogin('sofia@soldecasa.com', 'cfo2024')">
+              <div class="demo-user-header">
+                <div class="demo-user-avatar" style="background:#2E9E68;">SM</div>
+                <div>
+                  <div class="demo-user-name">Sofía Mendoza</div>
+                  <div class="demo-user-role">Directora Financiera (CFO)</div>
+                </div>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                <code>sofia@soldecasa.com</code> / <code>cfo2024</code>
+              </div>
+              <div class="demo-user-quick-btn">Entrar como Sofía</div>
+            </div>
+
+            <!-- Usuario 3: Carlos -->
+            <div class="demo-user-card" onclick="quickLogin('carlos@soldecasa.com', 'ops2024')">
+              <div class="demo-user-header">
+                <div class="demo-user-avatar" style="background:#1A73E8;">CN</div>
+                <div>
+                  <div class="demo-user-name">Carlos Navarro</div>
+                  <div class="demo-user-role">Jefe de Operaciones (COO)</div>
+                </div>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                <code>carlos@soldecasa.com</code> / <code>ops2024</code>
+              </div>
+              <div class="demo-user-quick-btn">Entrar como Carlos</div>
+            </div>
+
+            <!-- Usuario 4: Laura -->
+            <div class="demo-user-card" onclick="quickLogin('laura@soldecasa.com', 'growth2024')">
+              <div class="demo-user-header">
+                <div class="demo-user-avatar" style="background:#F59E0B;">LR</div>
+                <div>
+                  <div class="demo-user-name">Laura Restrepo</div>
+                  <div class="demo-user-role">Líder Comercial & Growth</div>
+                </div>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                <code>laura@soldecasa.com</code> / <code>growth2024</code>
+              </div>
+              <div class="demo-user-quick-btn">Entrar como Laura</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       HEADER PRINCIPAL
+       ========================================== -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <div class="brand-logo">SDC</div>
+        <div>
+          <h1 class="brand-title">Sol de Casa</h1>
+          <p class="brand-subtitle">Motor Financiero y Simulador Estratégico — Caso C</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Widget del Usuario Activo -->
+        <div id="header-user-widget" class="header-user-widget" style="display:none;">
+          <div id="header-user-avatar" class="header-user-avatar">AV</div>
+          <div>
+            <div id="header-user-name" class="header-user-name">Andrés Villalobos</div>
+            <div id="header-user-role" class="header-user-role">Director General</div>
+          </div>
+          <button class="btn-logout" onclick="handleLogout()" title="Cerrar sesión">
+            Salir
+          </button>
+        </div>
+
+        <button id="theme-toggle-btn" class="btn btn-secondary">Modo Oscuro</button>
+        <button class="btn btn-primary no-print" onclick="window.print()">Imprimir</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       BARRA DE NAVEGACIÓN DE PESTAÑAS
+       ========================================== -->
+  <nav class="tabs-nav no-print">
+    <button class="tab-btn active" id="tab-nav-resumen" data-target="tab-resumen" onclick="switchTab('tab-resumen')">📑 Resumen Ejecutivo</button>
+    <button class="tab-btn" id="tab-nav-tablero" data-target="tab-tablero" onclick="switchTab('tab-tablero')">🎛️ Tablero Interactivo</button>
+    <button class="tab-btn" id="tab-nav-simulador" data-target="tab-simulador" onclick="switchTab('tab-simulador')">📈 Simulador 24 Meses</button>
+    <button class="tab-btn" id="tab-nav-preguntas" data-target="tab-preguntas" onclick="switchTab('tab-preguntas')">❓ Respuestas Caso (1-7)</button>
+    <button class="tab-btn" id="tab-nav-extras" data-target="tab-extras" onclick="switchTab('tab-extras')">⚡ Extras & Estrategia</button>
+    <button class="tab-btn" id="tab-nav-auditoria" data-target="tab-auditoria" onclick="switchTab('tab-auditoria')">🔍 Auditoría & Errores IA</button>
+  </nav>
+
+  <!-- ==========================================
+       CONTENIDO PRINCIPAL
+       ========================================== -->
+  <main class="main-container">
+    <!-- BANNER DE SALUDO PERSONALIZADO (APARECE AL INICIAR SESIÓN) -->
+    <div id="greeting-banner" class="greeting-banner" style="display:none;">
+      <div class="greeting-info">
+        <div id="greeting-avatar" class="greeting-avatar">--</div>
+        <div>
+          <div class="greeting-title">
+            <span id="greeting-name">¡Bienvenido de nuevo!</span>
+            <span id="greeting-badge" class="greeting-role-badge">Director General</span>
+          </div>
+          <div id="greeting-message" class="greeting-subtext">
+            Cargando recomendaciones estratégicas para tu perfil...
+          </div>
+        </div>
+      </div>
+      <div class="greeting-actions">
+        <button id="greeting-action-btn" class="btn btn-secondary" style="font-size:0.75rem; padding:0.35rem 0.75rem;">
+          Ir a accion clave
+        </button>
+      </div>
+    </div>
+
+    <!-- BARRA DE ACCIONES Y EXPORTACIÓN -->
+    <div class="export-bar no-print">
+      <span style="font-size:0.72rem; font-weight:700; color:var(--text-muted); margin-right:0.25rem; text-transform:uppercase; letter-spacing:0.5px;">Exportar:</span>
+      <button class="btn-export" onclick="exportExecutiveMarkdown()">
+        Informe .md
+      </button>
+      <button class="btn-export" onclick="exportCashFlowCSV()">
+        Flujo 24M .csv
+      </button>
+      <button class="btn-export" onclick="exportPlanJSON()">
+        Guardar Plan
+      </button>
+      <label class="btn-export" style="cursor:pointer; margin-bottom:0;">
+        Cargar Plan
+        <input type="file" id="import-plan-file" accept=".json" style="display:none;" onchange="importPlanJSON(event)">
+      </label>
+      <div style="margin-left:auto; display:flex; gap:0.4rem; align-items:center;">
+        <span style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">Escenario:</span>
+        <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.25rem 0.6rem;" onclick="applyPresetScenario('hoy')">Hoy ($4k+$4k)</button>
+        <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.25rem 0.6rem;" onclick="applyPresetScenario('agencia')">Agencia ($8k Meta)</button>
+        <button class="btn btn-primary" style="font-size:0.72rem; padding:0.25rem 0.6rem;" onclick="applyPresetScenario('ganador')">Ganador</button>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         PESTAÑA 1: RESUMEN Y RECOMENDACIÓN
+         ========================================== -->
+    <section id="tab-resumen" class="tab-pane print-page" style="display:block;">
+      <!-- LA TRAMPA BANNER -->
+      <div class="trap-banner">
+        <div class="trap-icon">!</div>
+        <div class="trap-content">
+          <h3>La trampa del caso</h3>
+          <p class="trap-formula" id="trap-formula-text">Calculando...</p>
+          <p class="trap-desc" id="trap-desc-text"></p>
+        </div>
+      </div>
+
+      <!-- RECOMENDACIÓN EJECUTIVA PARA ANDRÉS -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <div class="chart-header">
+          <h2 class="chart-title">Memorando Ejecutivo para Andrés Villalobos</h2>
+          <span class="badge badge-red" style="font-size:0.9rem;">DECISIÓN: RECHAZAR AGENCIA LEADLY</span>
+        </div>
+        <div style="font-size:0.95rem; line-height:1.7; color:var(--text-main);">
+          <p style="margin-bottom:0.75rem;">
+            <strong>Andrés:</strong> La recomendación técnica y financiera definitiva es <strong>RECHAZAR</strong> la propuesta de Leadly de volcar el 100% del presupuesto ($8.000) a Meta. 
+            Aunque la agencia argumenta que <em>"en Meta el lead cuesta $8 y en Google $40"</em>, la realidad empírica de Sol de Casa demuestra que aceptar su propuesta <strong>destruye 4,86 ventas mensuales (−21,8%)</strong> y reduce el saldo de caja final a $48.320 al Mes 24 frente a más de $214.000 del plan propio.
+          </p>
+          <h4 style="font-weight:bold; margin:1rem 0 0.5rem 0;">¿Por qué engaña la propuesta de Leadly?</h4>
+          <ul style="margin-left:1.5rem; margin-bottom:1rem;">
+            <li><strong>Rendimientos decrecientes:</strong> Con $8.000 en Meta no llegan 1.000 leads como promete la agencia, sino <strong>840 leads</strong> (CPL real = $9,52).</li>
+            <li><strong>Calidad y calificación del embudo:</strong> Google convierte el <strong>11,92%</strong> de sus leads en clientes cerrados, mientras que Meta convierte únicamente el <strong>2,08%</strong>. Un lead de Google tiene casi 6 veces más probabilidad de comprar.</li>
+            <li><strong>El costo operativo de las visitas:</strong> Para cerrar 1 venta, Meta exige hacer <strong>5,56 visitas</strong> ($333,33 en viáticos y técnicos) frente a solo <strong>3,33 visitas</strong> en Google ($200,00). Sumando anuncios y visitas, el <strong>CAC Real de Meta es de $718,13</strong> frente a <strong>$535,54 en Google</strong> (Meta es 34,1% más costoso).</li>
+          </ul>
+          <h4 style="font-weight:bold; margin:1rem 0 0.5rem 0;">Los dos cambios recomendados (Plan Ganador):</h4>
+          <ol style="margin-left:1.5rem;">
+            <li><strong>Filtro previo + respuesta en menos de 5 minutos en Meta (Supuesto 7):</strong> Añadir 2 preguntas al formulario ("¿Es dueño de la casa?" y "¿Recibo de luz > $80?") y llamar en menos de 5 minutos. Aunque los leads bajan un 20%, la tasa de contacto sube del 55% al 80% y el cierre del 18% al 22%, reduciendo el CAC Real a $580.</li>
+            <li><strong>Contratar 1 técnico extra en el Mes 2:</strong> Rompe el cuello de botella de 100 visitas (aumentando la capacidad a 150 visitas desde el Mes 3). Esto permite absorber la saturación de Google ($6.000) y escalar Meta ($5.000), alcanzando <strong>$214.980 en caja al Mes 24</strong> sin violar nunca el piso de $5.000.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- TABLA RESUMEN COMPARATIVA DE LOS 3 ESCENARIOS -->
+      <div class="chart-card">
+        <h3 class="chart-title" style="margin-bottom:1rem;">Comparativa de Escenarios Estratégicos</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Métrica / Indicador Clave</th>
+                <th>1. Hoy ($4k Meta + $4k Google)</th>
+                <th>2. Agencia Leadly ($8k Meta)</th>
+                <th>3. Propio Ganador (S7 + 1 Técnico)</th>
+              </tr>
+            </thead>
+            <tbody id="results-scenarios-table-body">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PESTAÑA 2: TABLERO INTERACTIVO
+         ========================================== -->
+    <section id="tab-tablero" class="tab-pane" style="display:none;">
+      <div class="dashboard-grid">
+        <!-- SIDEBAR DE CONTROLES -->
+        <aside class="controls-sidebar">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <h3 style="font-size:1rem; font-weight:800;">Panel de Parámetros</h3>
+            <button id="btn-reset-case" class="btn btn-secondary" style="padding:0.25rem 0.5rem; font-size:0.75rem;">
+              ↺ Restaurar Caso
+            </button>
+          </div>
+
+          <!-- Presupuesto de Pauta -->
+          <div class="control-section">
+            <div class="control-title">Presupuesto de Pauta Mensual</div>
+            <div class="control-group">
+              <div class="control-label-row">
+                <span style="color:var(--channel-meta); font-weight:700;">Meta Ads ($)</span>
+              </div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-meta-spend" class="control-slider" min="0" max="10000" step="500" value="4000">
+                <input type="number" id="input-meta-spend" class="control-num-input" min="0" max="10000" step="500" value="4000">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label-row">
+                <span style="color:var(--channel-google); font-weight:700;">Google Ads ($)</span>
+              </div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-google-spend" class="control-slider" min="0" max="8000" step="500" value="4000">
+                <input type="number" id="input-google-spend" class="control-num-input" min="0" max="8000" step="500" value="4000">
+              </div>
+            </div>
+          </div>
+
+          <!-- Palancas Estratégicas -->
+          <div class="control-section">
+            <div class="control-title">Palancas del Negocio</div>
+            <div style="margin-bottom:0.75rem; display:flex; align-items:center; justify-content:space-between;">
+              <label for="switch-supuesto7" style="font-size:0.85rem; font-weight:600; cursor:pointer;" class="tooltip-trigger" data-tooltip="Filtro de 2 preguntas + llamada en < 5 min en Meta. Reduce 20% leads pero sube contacto al 80% y cierre al 22%.">
+                Filtro + Respuesta < 5 min (S7) ⓘ
+              </label>
+              <input type="checkbox" id="switch-supuesto7" style="width:18px; height:18px; cursor:pointer;">
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <label for="switch-battery" style="font-size:0.85rem; font-weight:600; cursor:pointer;" class="tooltip-trigger" data-tooltip="Upsell de batería de $3.000 con 20% margen. 15% de adopción esperada.">
+                Batería de Respaldo ($3.000) ⓘ
+              </label>
+              <input type="checkbox" id="switch-battery" style="width:18px; height:18px; cursor:pointer;">
+            </div>
+          </div>
+
+          <!-- Capacidad y Visitas -->
+          <div class="control-section">
+            <div class="control-title">Capacidad y Visitas</div>
+            <div class="control-group">
+              <div class="control-label-row">
+                <span class="tooltip-trigger" data-tooltip="Cada técnico cuesta $1.800/mes y suma 50 visitas/mes a partir del mes siguiente.">Técnicos Extra (+50 vis c/u) ⓘ</span>
+              </div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-extra-techs" class="control-slider" min="0" max="2" step="1" value="0">
+                <input type="number" id="input-extra-techs" class="control-num-input" min="0" max="2" step="1" value="0">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label-row">
+                <span class="tooltip-trigger" data-tooltip="Costo por visita técnica realizada: viáticos, transporte y bono de asesor.">Costo por Visita ($) ⓘ</span>
+              </div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-cost-visit" class="control-slider" min="30" max="120" step="5" value="60">
+                <input type="number" id="input-cost-visit" class="control-num-input" min="30" max="120" step="5" value="60">
+              </div>
+            </div>
+          </div>
+
+          <!-- Tasas Embudo Meta -->
+          <div class="control-section">
+            <div class="control-title" style="color:var(--channel-meta);">Tasas Embudo Meta</div>
+            <div class="control-group">
+              <div class="control-label-row"><span>% Contacto</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-meta-contact" class="control-slider" min="0.1" max="1.0" step="0.05" value="0.55">
+                <input type="number" id="input-meta-contact" class="control-num-input" min="10" max="100" step="5" value="55">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label-row"><span>% Agenda</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-meta-schedule" class="control-slider" min="0.1" max="1.0" step="0.05" value="0.30">
+                <input type="number" id="input-meta-schedule" class="control-num-input" min="10" max="100" step="5" value="30">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label-row"><span>% Visita Hecha</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-meta-visit" class="control-slider" min="0.1" max="1.0" step="0.05" value="0.70">
+                <input type="number" id="input-meta-visit" class="control-num-input" min="10" max="100" step="5" value="70">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label-row"><span>% Cierre Venta</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-meta-close" class="control-slider" min="0.05" max="0.6" step="0.01" value="0.18">
+                <input type="number" id="input-meta-close" class="control-num-input" min="5" max="60" step="1" value="18">
+              </div>
+            </div>
+          </div>
+
+          <!-- Tasas Embudo Google -->
+          <div class="control-section">
+            <div class="control-title" style="color:var(--channel-google);">Tasas Embudo Google</div>
+            <div class="control-group">
+              <div class="control-label-row"><span>% Contacto</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-google-contact" class="control-slider" min="0.1" max="1.0" step="0.05" value="0.85">
+                <input type="number" id="input-google-contact" class="control-num-input" min="10" max="100" step="5" value="85">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label-row"><span>% Agenda</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-google-schedule" class="control-slider" min="0.1" max="1.0" step="0.05" value="0.55">
+                <input type="number" id="input-google-schedule" class="control-num-input" min="10" max="100" step="5" value="55">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label-row"><span>% Visita Hecha</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-google-visit" class="control-slider" min="0.1" max="1.0" step="0.05" value="0.85">
+                <input type="number" id="input-google-visit" class="control-num-input" min="10" max="100" step="5" value="85">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label-row"><span>% Cierre Venta</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-google-close" class="control-slider" min="0.05" max="0.6" step="0.01" value="0.30">
+                <input type="number" id="input-google-close" class="control-num-input" min="5" max="60" step="1" value="30">
+              </div>
+            </div>
+          </div>
+
+          <!-- Precio Ticket -->
+          <div class="control-section">
+            <div class="control-title">Precio Ticket</div>
+            <div class="control-group">
+              <div class="control-label-row"><span>Precio Instalación ($)</span></div>
+              <div class="control-input-wrapper">
+                <input type="range" id="slider-price" class="control-slider" min="4000" max="9000" step="100" value="6500">
+                <input type="number" id="input-price" class="control-num-input" min="4000" max="9000" step="100" value="6500">
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- ÁREA CENTRAL DE CONTENIDO -->
+        <div class="content-area">
+          <!-- GRID DE KPIS EN VIVO -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-label">
+                <span>Leads Totales</span>
+                <span class="tooltip-trigger" data-tooltip="Suma de prospectos captados en ambos canales según la curva histórica.">ⓘ</span>
+              </div>
+              <div class="kpi-value" id="kpi-leads-val">600</div>
+              <div class="kpi-meta-split">
+                <span class="meta-split-val" id="kpi-leads-meta">Meta: 500</span>
+                <span class="google-split-val" id="kpi-leads-google">Google: 100</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">
+                <span>Visitas Hechas</span>
+                <span id="kpi-visits-badge" class="badge badge-green">97.5%</span>
+              </div>
+              <div class="kpi-value" id="kpi-visits-val">97.5 / 100</div>
+              <div class="kpi-meta-split">
+                <span class="meta-split-val" id="kpi-visits-meta">Meta: 57.8</span>
+                <span class="google-split-val" id="kpi-visits-google">Google: 39.7</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">
+                <span>Ventas Mensuales</span>
+                <span class="tooltip-trigger" data-tooltip="Clientes que firman contrato tras recibir la visita técnica.">ⓘ</span>
+              </div>
+              <div class="kpi-value" id="kpi-sales-val">22.32</div>
+              <div class="kpi-meta-split">
+                <span class="meta-split-val" id="kpi-sales-meta">Meta: 10.4</span>
+                <span class="google-split-val" id="kpi-sales-google">Google: 11.9</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">
+                <span>CAC Real (+Visitas)</span>
+                <span class="tooltip-trigger" data-tooltip="Costo total de conseguir un cliente: Inversión publicitaria + Costo de todas las visitas técnicas realizadas para cerrar.">ⓘ</span>
+              </div>
+              <div class="kpi-value" id="kpi-cac-val">$620,70</div>
+              <div class="kpi-meta-split">
+                <span class="meta-split-val" id="kpi-cac-meta">Meta: $718,13</span>
+                <span class="google-split-val" id="kpi-cac-google">Google: $535,54</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">
+                <span>LTV:CAC Global</span>
+                <span id="kpi-ltvcac-badge" class="badge badge-green">Excelente</span>
+              </div>
+              <div class="kpi-value" id="kpi-ltvcac-val">2.62x</div>
+              <div class="kpi-meta-split">
+                <span class="meta-split-val" id="kpi-ltv-meta">Meta: 2.26x</span>
+                <span class="google-split-val" id="kpi-ltv-google">Google: 3.03x</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">
+                <span>Valor Neto de Visita</span>
+                <span class="tooltip-trigger" data-tooltip="Ganancia esperada que deja cada visita: (% Cierre × $1.625) − $60 de viáticos.">ⓘ</span>
+              </div>
+              <div class="kpi-value" id="kpi-visitval-val">$312,00</div>
+              <div class="kpi-meta-split">
+                <span class="meta-split-val" id="kpi-val-meta">Meta: $232,50</span>
+                <span class="google-split-val" id="kpi-val-google">Google: $427,50</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRID DE GRÁFICOS INTERACTIVOS -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3 class="chart-title">Embudo por Canal Lado a Lado</h3>
+                <span style="font-size:0.8rem; color:var(--text-muted);">Pérdida en cada etapa del funnel</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chart-funnel"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3 class="chart-title">CPL vs CAC Real (La Trampa Ilustrada)</h3>
+                <span style="font-size:0.8rem; color:var(--text-muted);">Impacto del costo de visitas técnicas</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="chart-cac"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card" style="grid-column: 1 / -1;">
+              <div class="chart-header">
+                <h3 class="chart-title">Visitas Pedidas vs Capacidad Operativa</h3>
+                <span style="font-size:0.8rem; color:var(--text-muted);">Prioridad operativa: Google 1º (+$427,50), Meta 2º (+$232,50)</span>
+              </div>
+              <div class="chart-container" style="height:240px;">
+                <canvas id="chart-capacity"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PESTAÑA 3: SIMULADOR 24 MESES
+         ========================================== -->
+    <section id="tab-simulador" class="tab-pane" style="display:none;">
+      <!-- KPI DE PLAN DE CAJA -->
+      <div class="kpi-grid" style="margin-bottom:1.5rem;">
+        <div class="kpi-card">
+          <div class="kpi-label">Caja Mínima Proyectada</div>
+          <div class="kpi-value" id="sim-min-cash">$12.000</div>
+          <div class="kpi-subtext" id="sim-min-month">Mes 1</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Caja Final al Mes 24</div>
+          <div class="kpi-value" id="sim-final-cash" style="color:var(--accent-green);">$168.450</div>
+          <div class="kpi-subtext">Patrimonio líquido acumulado</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Instalaciones Totales</div>
+          <div class="kpi-value" id="sim-total-sales">535.6</div>
+          <div class="kpi-subtext">En los 24 meses</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Cumplimiento de Reglas</div>
+          <div style="margin-top:0.5rem;" id="sim-validation-alert">
+            <span class="badge badge-green">Verificando...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRÁFICO DE CAJA MES A MES -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <div class="chart-header">
+          <h3 class="chart-title">Trayectoria de Saldo en Banco a 24 Meses vs Piso de Seguridad ($5.000)</h3>
+        </div>
+        <div class="chart-container" style="height:320px;">
+          <canvas id="chart-cash-flow"></canvas>
+        </div>
+      </div>
+
+      <!-- COMPARADOR DE LOS 4 PLANES -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <h3 class="chart-title" style="margin-bottom:1rem;">Benchmark de los 4 Planes Estratégicos (Nivel 3)</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Plan Estratégico</th>
+                <th>Caja Mínima (Mes)</th>
+                <th>Caja Mes 24</th>
+                <th>Instalaciones</th>
+                <th>Reglas</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="plans-comparison-table-body">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AUDITORÍA MES 1 A MANO -->
+      <div id="month1-manual-container" style="margin-bottom:1.5rem;"></div>
+
+      <!-- TABLA DETALLADA DE 24 MESES -->
+      <div class="chart-card">
+        <h3 class="chart-title" style="margin-bottom:1rem;">Flujo de Caja Detallado Mes a Mes (Mes 1 a 24)</h3>
+        <div class="table-responsive" style="max-height:500px; overflow-y:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Mes</th>
+                <th>Meta</th>
+                <th>Google</th>
+                <th>Total Pauta</th>
+                <th>Leads</th>
+                <th>Vis. Pedidas</th>
+                <th>Capacidad</th>
+                <th>Vis. Hechas</th>
+                <th>Ventas</th>
+                <th>Entradas ($)</th>
+                <th>Salidas ($)</th>
+                <th>Flujo Neto</th>
+                <th>Caja Final</th>
+                <th>Alerta Piso</th>
+              </tr>
+            </thead>
+            <tbody id="sim-24-table-body">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PESTAÑA 4: RESPUESTAS DEL CASO (PREGUNTAS 1 A 7)
+         ========================================== -->
+    <section id="tab-preguntas" class="tab-pane" style="display:none;">
+      <div class="chart-card" style="line-height:1.7;">
+        <h2 class="chart-title" style="font-size:1.3rem; margin-bottom:1.25rem;">
+          Respuestas Ejecutivas a las 7 Preguntas de Andrés
+        </h2>
+
+        <div style="margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border-color);">
+          <h3 style="font-size:1.05rem; font-weight:800; color:var(--primary-sun-hover);">
+            1. ¿Cuánto deja una venta? (Contribución antes de marketing)
+          </h3>
+          <p>
+            <strong>Fórmula:</strong> Precio × (Margen Bruto − Comisión de Asesora)<br>
+            <strong>Cálculo:</strong> $6.500 × (28% − 3%) = $6.500 × 25% = <strong>$1.625,00</strong>.<br>
+            <em>Nota financiera:</em> La comisión del 3% ($195) se paga sobre todas las ventas, vengan de pauta o no, por lo que pertenece a la economía unitaria del producto y no al CAC.
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border-color);">
+          <h3 style="font-size:1.05rem; font-weight:800; color:var(--primary-sun-hover);">
+            2. Embudo completo de cada canal: ¿En qué paso se cae más gente?
+          </h3>
+          <p>
+            <strong>Meta:</strong> 500 leads → 55% contacto (275) → 30% agenda (82,5) → 70% visita hecha (57,75) → 18% cierre (10,395 ventas).<br>
+            <strong>Google:</strong> 100 leads → 85% contacto (85) → 55% agenda (46,75) → 85% visita hecha (39,74) → 30% cierre (11,92 ventas).<br>
+            <strong>Diagnóstico de fugas:</strong> En Meta el embudo se desmorona en el paso <strong>Lead → Contacto (se pierde el 45%)</strong> debido a un 18% de teléfonos inválidos y a que las asesoras tardan 31 horas en llamar. Luego, de los contactados, solo el <strong>30% agenda</strong> (el 70% restante no tenía intención real de compra).
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border-color);">
+          <h3 style="font-size:1.05rem; font-weight:800; color:var(--primary-sun-hover);">
+            3. ¿Qué canal es más barato de verdad? (CAC de Anuncios vs CAC Real)
+          </h3>
+          <p>
+            <strong>CAC de Anuncios:</strong> Meta = $4.000 / 10,395 = <strong>$384,80</strong> | Google = $4.000 / 11,921 = <strong>$335,53</strong>.<br>
+            <strong>Visitas por venta:</strong> Meta requiere 1 / 0,18 = <strong>5,56 visitas</strong> ($333,33 en costo de visita) | Google requiere 1 / 0,30 = <strong>3,33 visitas</strong> ($200,00).<br>
+            <strong>CAC Real Total (Anuncios + Visitas):</strong><br>
+            • Meta: ($4.000 + 57,75 × $60) / 10,395 = <strong>$718,13</strong>.<br>
+            • Google: ($4.000 + 39,74 × $60) / 11,921 = <strong>$535,54</strong>.<br>
+            <strong>Conclusión:</strong> Google es mucho más barato de verdad (el cliente en Meta cuesta un 34,1% más).
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border-color);">
+          <h3 style="font-size:1.05rem; font-weight:800; color:var(--primary-sun-hover);">
+            4. LTV:CAC y Payback en caja
+          </h3>
+          <p>
+            <strong>LTV:CAC:</strong> Google tiene un ratio excelente de <strong>3,03x</strong> ($1.625 / $535,54). Meta tiene <strong>2,26x</strong>.<br>
+            <strong>Payback en caja:</strong> En el mes 0 (firma) el cliente entra con 50% ($3.250) y salen equipos 55% ($3.575) y comisión 3% ($195) → déficit operativo de -$520. Al sumar el CAC Real, el cliente arranca en -$1.055 (Google) y -$1.238 (Meta). En el mes 1 (instalación) entran $3.250 y salen $1.105 (+$2.145 netos). Por tanto, <strong>ambos canales recuperan la inversión íntegra en el Mes 1</strong>.
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border-color);">
+          <h3 style="font-size:1.05rem; font-weight:800; color:var(--primary-sun-hover);">
+            5. ¿Qué pasaría con la propuesta de la agencia?
+          </h3>
+          <p>
+            <strong>Con el historial real ($8.000 = 840 leads):</strong> Visitas pedidas = 97,02 → <strong>17,46 ventas</strong>.<br>
+            <strong>Como la cuenta la agencia ($8 CPL = 1.000 leads):</strong> Visitas pedidas = 115,5 → se topan en 100 visitas de capacidad → <strong>18,00 ventas</strong>.<br>
+            En ambos casos, la agencia entrega entre <strong>4,8 y 4,3 ventas MENOS</strong> que el modelo actual de Sol de Casa (22,32 ventas), destruyendo valor a gran escala.
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border-color);">
+          <h3 style="font-size:1.05rem; font-weight:800; color:var(--primary-sun-hover);">
+            6. ¿Cuánto vale una visita técnica en cada canal?
+          </h3>
+          <p>
+            <strong>Fórmula:</strong> (% Cierre × Contribución unitaria) − Costo de la visita ($60)<br>
+            • Visita Google: (30% × $1.625) − $60 = $487,50 − $60 = <strong>+$427,50</strong>.<br>
+            • Visita Meta: (18% × $1.625) − $60 = $292,50 − $60 = <strong>+$232,50</strong>.<br>
+            <strong>Regla de prioridad:</strong> Cuando las visitas del mes superen la capacidad de 100, se deben asignar <strong>primero a Google</strong> porque cada visita aporta casi el doble de valor neto que una de Meta.
+          </p>
+        </div>
+
+        <div>
+          <h3 style="font-size:1.05rem; font-weight:800; color:var(--primary-sun-hover);">
+            7. Dos cambios propuestos y cuantificación de su impacto
+          </h3>
+          <p>
+            <strong>Cambio 1 (Filtro + Respuesta < 5 min en Meta):</strong> Eleva el contacto al 80% y el cierre al 22%, reduciendo el CAC Real de Meta a $580 y subiendo el valor por visita a $310.<br>
+            <strong>Cambio 2 (1 Técnico extra en Mes 2):</strong> Amplía la capacidad a 150 visitas/mes, absorbiendo toda la saturación rentable de Google y llevando la caja final a $214.980 en 24 meses.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PESTAÑA 5: EXTRAS Y ESTRATEGIA
+         ========================================== -->
+    <section id="tab-extras" class="tab-pane" style="display:none;">
+      <!-- CPL DE EQUILIBRIO Y OPTIMIZADOR -->
+      <div class="charts-grid" style="margin-bottom:1.5rem;">
+        <div id="cpl-breakeven-container"></div>
+        <div id="optimizer-result-container"></div>
+      </div>
+
+      <!-- CURVA DE RENDIMIENTO MARGINAL (EXTRA 4) -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <div class="chart-header">
+          <h3 class="chart-title">Curva de Rendimiento Marginal y Rendimientos Decrecientes</h3>
+          <span class="badge badge-yellow">Extra 4: ¿Dónde poner el siguiente dólar?</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+          Análisis tramo a tramo de los incrementos de $2.000 en pauta. Muestra la ley de rendimientos decrecientes y la saturación de Google a partir de $8.000.
+        </p>
+        <div class="table-responsive" style="margin-bottom:1rem;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tramo de Inversión</th>
+                <th>Incremento ($)</th>
+                <th>Leads Extra Meta</th>
+                <th>CPL Marginal Meta</th>
+                <th>Leads Extra Google</th>
+                <th>CPL Marginal Google</th>
+                <th>Decisión Marginal</th>
+              </tr>
+            </thead>
+            <tbody id="marginal-returns-table-body">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GRÁFICO TORNADO -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <div class="chart-header">
+          <h3 class="chart-title">Análisis de Sensibilidad (Gráfico Tornado)</h3>
+          <span style="font-size:0.8rem; color:var(--text-muted);">Impacto de variaciones de ±20% en CAC Real</span>
+        </div>
+        <div class="chart-container" style="height:280px;">
+          <canvas id="chart-tornado"></canvas>
+        </div>
+      </div>
+
+      <!-- PRUEBAS DE ESTRÉS PARA EL BANCO -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <div class="chart-header">
+          <h3 class="chart-title">Pruebas de Estrés Bancarias (Pitch de Línea de Crédito)</h3>
+          <span class="badge badge-yellow">Evaluación para el Banco</span>
+        </div>
+        <div class="table-responsive" style="margin-bottom:1rem;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Escenario de Estrés</th>
+                <th>Caja Mínima (Mes)</th>
+                <th>Caja Mes 24</th>
+                <th>Piso $5.000</th>
+                <th>Crédito Preventivo Necesario</th>
+              </tr>
+            </thead>
+            <tbody id="stress-tests-table-body">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SIMULADOR INTERACTIVO DE LÍNEA DE CRÉDITO -->
+        <div style="background:var(--bg-card-alt); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1rem;">
+          <h4 style="font-weight:700; margin-bottom:0.5rem; font-size:0.9rem;">Simulador de Línea de Crédito Rotativa para el Pitch al Banco:</h4>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; align-items:center;">
+            <div>
+              <label style="font-size:0.8rem; font-weight:600;">Monto Solicitado: <span id="credit-amount-display" style="font-weight:800; color:var(--accent-green);">$15.000</span></label>
+              <input type="range" id="slider-credit-amount" min="5000" max="40000" step="5000" value="15000" style="width:100%;" oninput="updateCreditSimulator()">
+            </div>
+            <div>
+              <label style="font-size:0.8rem; font-weight:600;">Tasa de Interés Anual (APR): <span id="credit-rate-display" style="font-weight:800;">14.0%</span></label>
+              <input type="range" id="slider-credit-rate" min="8" max="24" step="1" value="14" style="width:100%;" oninput="updateCreditSimulator()">
+            </div>
+            <div>
+              <label style="font-size:0.8rem; font-weight:600;">Plazo de Amortización: <span id="credit-term-display" style="font-weight:800;">12 meses</span></label>
+              <input type="range" id="slider-credit-term" min="6" max="24" step="6" value="12" style="width:100%;" oninput="updateCreditSimulator()">
+            </div>
+          </div>
+          <div id="credit-calc-result" style="margin-top:0.75rem; font-size:0.85rem; padding:0.5rem; background:var(--bg-card); border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+            Calculando cuota mensual e impacto financiero...
+          </div>
+        </div>
+      </div>
+
+      <!-- MODO PRESENTACIÓN -->
+      <div class="chart-card">
+        <h3 class="chart-title" style="margin-bottom:1rem;">Modo Presentación Ejecutiva con Cronómetro y Alerta Sonora</h3>
+        <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
+          <button id="btn-timer-3m" class="btn btn-primary">Iniciar Pitch — 3 min</button>
+          <button id="btn-timer-2m" class="btn btn-secondary">Iniciar Pitch — 2 min</button>
+          <button id="btn-timer-stop" class="btn btn-secondary">Detener</button>
+          <div id="timer-display" style="font-size:1.75rem; font-weight:900; font-family:var(--font-mono); color:var(--accent-red); margin-left:1rem;">
+            00:00
+          </div>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-muted);">
+          Estructura del Pitch de 3 min: Minuto 1 (La Decisión y La Trampa en números) | Minuto 2 (Los 2 cambios y su impacto en caja) | Minuto 3 (Riesgos controlados y plan de ejecución).
+        </p>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PESTAÑA 6: AUDITORÍA Y ERRORES IA
+         ========================================== -->
+    <section id="tab-auditoria" class="tab-pane" style="display:none;">
+      <!-- TESTS EN VIVO -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <div class="chart-header">
+          <h3 class="chart-title">Auditoría en tiempo real de formulas y referencias</h3>
+          <span class="badge badge-green">Tests en navegador</span>
+        </div>
+        <div id="browser-tests-container"></div>
+      </div>
+
+      <!-- TABLA ERRORES IA -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <h3 class="chart-title" style="margin-bottom:1rem;">Registro Crítico: En qué se equivocó o confundió la IA</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Métrica / Concepto</th>
+                <th>Qué dijo la IA inicialmente</th>
+                <th>Por qué estaba mal (Análisis Crítico)</th>
+                <th>Cómo se corrigió</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Comparación de CPL</strong></td>
+                <td>Afirmó que Meta era 5 veces mejor porque el lead costaba $8 frente a $40 de Google.</td>
+                <td>Ignoró el embudo de ventas y el costo de visitas. Meta requiere 5,56 visitas por venta ($333) vs 3,33 en Google ($200). El CAC Real de Meta es de $718 frente a $536 en Google.</td>
+                <td>Se implementó el CAC Real sumando el costo de las visitas y se calculó el CPL de equilibrio ($4,20).</td>
+              </tr>
+              <tr>
+                <td><strong>2. Capacidad Operativa</strong></td>
+                <td>Asumió que 1.000 leads en Meta generaban ventas proporcionales sin techo.</td>
+                <td>El equipo de 2 técnicos está limitado a 100 visitas al mes. 1.000 leads demandan 115,5 visitas; 15,5 visitas se pierden irremediablemente.</td>
+                <td>Se programó la restricción operativa estricta y el descarte de visitas no atendidas.</td>
+              </tr>
+              <tr>
+                <td><strong>3. Rendimientos de Pauta</strong></td>
+                <td>Calculó 1.000 leads con $8.000 en Meta asumiendo CPL plano de $8.</td>
+                <td>El historial de pruebas de 12 meses demuestra saturación: $8.000 producen 840 leads (CPL real = $9,52).</td>
+                <td>Se construyó el módulo de interpolación lineal continua sobre los puntos empíricos del caso.</td>
+              </tr>
+              <tr>
+                <td><strong>4. Flujo de Caja Desfasado</strong></td>
+                <td>Sumó ingresos y restó costos de una venta dentro del mismo mes.</td>
+                <td>Los clientes pagan en 2 cuotas (50% al firmar y 50% al mes siguiente), pero los equipos (55%) y comisiones (3%) se pagan de contado al firmar, drenando -$520 por cliente el mes 0.</td>
+                <td>Se construyó el motor de desfase de caja a 24 meses (t y t-1) respetando el piso de $5.000.</td>
+              </tr>
+              <tr>
+                <td><strong>5. Habilitación de Técnicos</strong></td>
+                <td>Añadió la capacidad de 50 visitas en el mismo mes de contratación del técnico.</td>
+                <td>El caso estipula que el primer mes el técnico se capacita (se paga su sueldo de $1.800) y suma capacidad al mes siguiente.</td>
+                <td>Se desacopló el flujo de pago salarial de la activación de capacidad operativa en el simulador.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REGISTRO DE SUPUESTOS OFICIALES -->
+      <div class="chart-card">
+        <h3 class="chart-title" style="margin-bottom:1rem;">Registro Oficial de Supuestos y Fuentes de Verdad</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Supuesto</th>
+                <th>Valor Base</th>
+                <th>Unidad</th>
+                <th>Justificación Documental</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Precio Promedio Instalación</strong></td>
+                <td>$6.500</td>
+                <td>USD</td>
+                <td>CASO.md Sección 1: Promedio residencial estándar.</td>
+              </tr>
+              <tr>
+                <td><strong>Margen Bruto de Equipos e Instalación</strong></td>
+                <td>28% ($1.820)</td>
+                <td>%</td>
+                <td>100% − 55% equipos − 17% cuadrilla instaladora.</td>
+              </tr>
+              <tr>
+                <td><strong>Comisión de Asesora</strong></td>
+                <td>3% ($195)</td>
+                <td>%</td>
+                <td>Pagada mes de firma sobre todas las ventas (contribución neta = $1.625).</td>
+              </tr>
+              <tr>
+                <td><strong>Capacidad Máxima Técnica</strong></td>
+                <td>100</td>
+                <td>Visitas/mes</td>
+                <td>2 técnicos actuales × 50 visitas máximas por mes cada uno.</td>
+              </tr>
+              <tr>
+                <td><strong>Técnico Extra</strong></td>
+                <td>$1.800 / +50 vis</td>
+                <td>USD / mes</td>
+                <td>Cuesta desde el mes de firma; aporta capacidad desde el mes siguiente.</td>
+              </tr>
+              <tr>
+                <td><strong>Piso de Seguridad de Caja</strong></td>
+                <td>$5.000</td>
+                <td>USD</td>
+                <td>Regla innegociable de Sofía para contingencias imprevistas.</td>
+              </tr>
+              <tr>
+                <td><strong>Costo Fijo Mensual</strong></td>
+                <td>$18.000</td>
+                <td>USD/mes</td>
+                <td>Sueldos base, oficina, camioneta, CRM y herramientas.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       INYECCIÓN DEL MOTOR JS COMPLETO
+       ========================================== -->
+  <script>
+    /* JAVASCRIPT_INJECTION */
+  </script>
+</body>
+</html>

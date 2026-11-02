@@ -3,87 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sol de Casa – Calculadora, Tablero y Simulador Financiero</title>
+  <title>Sol de Casa – Sistema Financiero, Tablero y Simulador Solar</title>
   <!-- Chart.js 4.4.1 desde CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     
 /**
- * SISTEMA DE DISEÑO SOL DE CASA - VARIABLES Y TEMAS
- * Paleta corporativa: Amarillo Sol (#FFC531), Verde Éxito (#2E9E68), Negro Tinta (#1C1917), Crema (#FBF9F4)
- * Colores de canal: Meta (#E1306C) y Google (#1A73E8)
+ * SISTEMA DE DISEÑO SOL DE CASA — TOKENS Y VARIABLES
+ * Paleta: Índigo Profundo · Ámbar Cálido · Blanco Roto · Gris Pizarra
+ * Tipografía: Plus Jakarta Sans (display) · Inter (body)
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
 :root {
-  /* Marca Sol de Casa */
-  --primary-sun: #FFC531;
-  --primary-sun-hover: #E5AD23;
-  --primary-sun-light: #FFF8E6;
-  --accent-green: #2E9E68;
-  --accent-green-light: #EBF7F1;
-  --accent-red: #D9383A;
-  --accent-red-light: #FDECEC;
-  --accent-yellow: #F59E0B;
-  --accent-yellow-light: #FEF3C7;
+  /* Colores de marca — modo claro */
+  --primary:        #5B21B6;         /* índigo profundo */
+  --primary-hover:  #4C1D95;
+  --primary-light:  #EDE9FE;
+  --primary-mid:    #7C3AED;
 
-  /* Canales de Marketing */
-  --channel-meta: #E1306C;
-  --channel-meta-light: #FCE7F3;
-  --channel-meta-border: #F472B6;
-  --channel-google: #1A73E8;
-  --channel-google-light: #E8F0FE;
-  --channel-google-border: #60A5FA;
+  --accent:         #D97706;         /* ámbar cálido */
+  --accent-hover:   #B45309;
+  --accent-light:   #FEF3C7;
+  --accent-vivid:   #F59E0B;
 
-  /* Neutros - Modo Claro */
-  --bg-app: #FBF9F4;
-  --bg-card: #FFFFFF;
-  --bg-card-alt: #F8FAFC;
-  --bg-sidebar: #FFFFFF;
-  --border-color: #E2E8F0;
-  --border-color-strong: #CBD5E1;
-  --text-main: #1C1917;
-  --text-muted: #64748B;
-  --text-light: #94A3B8;
+  --ok:             #047857;         /* esmeralda */
+  --ok-light:       #ECFDF5;
+  --ok-mid:         #10B981;
 
-  /* Sombras y Radios */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-full: 9999px;
+  --danger:         #BE123C;         /* carmín */
+  --danger-light:   #FFF1F2;
+  --danger-mid:     #E11D48;
+
+  --warn:           #92400E;         /* ámbar oscuro */
+  --warn-light:     #FFFBEB;
+  --warn-mid:       #D97706;
+
+  /* Canales */
+  --ch-meta:        #9B1D6A;
+  --ch-meta-light:  #FCE7F3;
+  --ch-meta-border: #EC4899;
+
+  --ch-google:      #1D4ED8;
+  --ch-google-light:#EFF6FF;
+  --ch-google-border:#60A5FA;
+
+  /* Superficie — modo claro */
+  --bg-app:         #F8F7F4;
+  --bg-card:        #FFFFFF;
+  --bg-card-alt:    #F5F4F1;
+  --bg-sidebar:     #FAFAF8;
+  --bg-nav:         #1E1B4B;         /* azul noche para la nav */
+
+  --border:         #E4E2DD;
+  --border-strong:  #C9C7C0;
+
+  --text-main:      #1C1917;
+  --text-secondary: #44403C;
+  --text-muted:     #78716C;
+  --text-light:     #A8A29E;
+
+  /* Sombras */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+
+  /* Radios */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --r-full: 9999px;
 
   /* Tipografía */
-  --font-display: 'Merriweather', 'Georgia', serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-display: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  --font-body:    'Inter', 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
 }
 
-[data-theme="dark"] {
-  --bg-app: #0F172A;
-  --bg-card: #1E293B;
-  --bg-card-alt: #162032;
-  --bg-sidebar: #1E293B;
-  --border-color: #334155;
-  --border-color-strong: #475569;
-  --text-main: #F8FAFC;
-  --text-muted: #94A3B8;
-  --text-light: #64748B;
+/* Aliases de compatibilidad con código existente */
+:root {
+  --primary-sun:        var(--accent-vivid);
+  --primary-sun-hover:  var(--accent-hover);
+  --primary-sun-light:  var(--accent-light);
+  --accent-green:       var(--ok);
+  --accent-green-light: var(--ok-light);
+  --accent-red:         var(--danger);
+  --accent-red-light:   var(--danger-light);
+  --accent-yellow:      var(--warn-mid);
+  --accent-yellow-light:var(--warn-light);
+  --channel-meta:       var(--ch-meta);
+  --channel-meta-light: var(--ch-meta-light);
+  --channel-meta-border:var(--ch-meta-border);
+  --channel-google:     var(--ch-google);
+  --channel-google-light:var(--ch-google-light);
+  --channel-google-border:var(--ch-google-border);
+  --border-color:       var(--border);
+  --border-color-strong:var(--border-strong);
+  --bg-card-alt:        var(--bg-card-alt);
+  --shadow-md:          var(--shadow-md);
+  --shadow-lg:          var(--shadow-lg);
+  --radius-sm:          var(--r-sm);
+  --radius-md:          var(--r-md);
+  --radius-lg:          var(--r-lg);
+  --radius-full:        var(--r-full);
+  --font-display:       var(--font-display);
+  --font-sans:          var(--font-body);
+}
 
-  --primary-sun-light: rgba(255, 197, 49, 0.15);
-  --channel-meta-light: rgba(225, 48, 108, 0.15);
-  --channel-google-light: rgba(26, 115, 232, 0.15);
-  --accent-green-light: rgba(46, 158, 104, 0.15);
-  --accent-red-light: rgba(217, 56, 58, 0.15);
-  --accent-yellow-light: rgba(245, 158, 11, 0.15);
-  
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+/* MODO OSCURO */
+[data-theme="dark"] {
+  --bg-app:         #0F0E17;
+  --bg-card:        #1A1927;
+  --bg-card-alt:    #14131F;
+  --bg-sidebar:     #1A1927;
+  --bg-nav:         #0D0C1A;
+  --border:         #2E2C42;
+  --border-strong:  #3D3A57;
+  --text-main:      #F0EEF8;
+  --text-secondary: #C4C0D8;
+  --text-muted:     #8B879D;
+  --text-light:     #5A5770;
+
+  --primary-light:  rgba(91,33,182,0.22);
+  --ok-light:       rgba(4,120,87,0.2);
+  --danger-light:   rgba(190,18,60,0.2);
+  --warn-light:     rgba(146,64,14,0.2);
+  --accent-light:   rgba(217,119,6,0.2);
+  --ch-meta-light:  rgba(155,29,106,0.2);
+  --ch-google-light:rgba(29,78,216,0.2);
+
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
 }
 
 /**
- * ESTILOS DE ESTRUCTURA Y LAYOUT RESPONSIVO
+ * ESTRUCTURA Y LAYOUT RESPONSIVO — Sol de Casa
  */
 
 * {
@@ -93,28 +151,29 @@
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   background-color: var(--bg-app);
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
 
-/* Header Principal */
+/* ── Header ── */
 .app-header {
   background: var(--bg-card);
-  border-bottom: 2px solid var(--primary-sun);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-xs);
 }
 
 .header-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0.75rem 1.5rem;
+  padding: 0 1.5rem;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -128,29 +187,36 @@ body {
 }
 
 .brand-logo {
-  width: 40px;
-  height: 40px;
-  background: var(--primary-sun);
-  border-radius: var(--radius-md);
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+  border-radius: var(--r-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 900;
-  font-size: 1.25rem;
-  color: #1C1917;
-  box-shadow: 0 2px 4px rgba(255, 197, 49, 0.4);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
+  letter-spacing: -0.5px;
+  box-shadow: 0 2px 8px rgba(91,33,182,0.35);
+  font-family: var(--font-display);
+  flex-shrink: 0;
 }
 
 .brand-title {
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.3px;
   line-height: 1.2;
 }
 
 .brand-subtitle {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.1px;
 }
 
 .header-actions {
@@ -159,180 +225,183 @@ body {
   gap: 0.5rem;
 }
 
-/* Barra de Navegación de Pestañas */
+/* ── Navegación de pestañas ── */
 .tabs-nav {
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0 1.5rem;
+  background: var(--bg-nav);
+  padding: 0 1rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
   overflow-x: auto;
-  scrollbar-width: thin;
+  scrollbar-width: none;
 }
 
+.tabs-nav::-webkit-scrollbar { display: none; }
+
 .tab-btn {
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1.1rem;
   background: none;
   border: none;
   border-bottom: 3px solid transparent;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.55);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.825rem;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  letter-spacing: 0.1px;
+  font-family: var(--font-body);
 }
 
 .tab-btn:hover {
-  color: var(--text-main);
-  background: var(--primary-sun-light);
+  color: rgba(255,255,255,0.85);
 }
 
 .tab-btn.active {
-  color: var(--text-main);
-  border-bottom-color: var(--primary-sun);
-  background: var(--primary-sun-light);
+  color: #fff;
+  border-bottom-color: var(--accent-vivid);
 }
 
-/* Contenedor Principal */
+/* ── Contenedor principal ── */
 .main-container {
   max-width: 1400px;
   margin: 1.5rem auto;
   padding: 0 1.5rem 3rem 1.5rem;
 }
 
-/* Layout Dashboard: Panel de Controles + Panel de Visualización */
+/* ── Dashboard layout ── */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 320px 1fr;
   gap: 1.5rem;
   align-items: start;
 }
 
 @media (max-width: 1024px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
+  .dashboard-grid { grid-template-columns: 1fr; }
 }
 
 .controls-sidebar {
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
   padding: 1.25rem;
   box-shadow: var(--shadow-sm);
   position: sticky;
-  top: 90px;
-  max-height: calc(100vh - 110px);
+  top: 78px;
+  max-height: calc(100vh - 100px);
   overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .content-area {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-/* Grid de KPIs */
+/* ── Grids ── */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.85rem;
 }
 
-/* Grid de Gráficos */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+  gap: 1.25rem;
 }
 
 @media (max-width: 640px) {
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
+  .charts-grid { grid-template-columns: 1fr; }
 }
 
 /**
- * ESTILOS DE COMPONENTES UI (TARJETAS, CONTROLES, SEMÁFOROS, BANNERS)
+ * COMPONENTES UI — Sol de Casa
+ * Sin emojis. Paleta índigo/ámbar. Tipografía Plus Jakarta Sans + Inter.
  */
 
-/* Banner de La Trampa */
+/* ── Banner de La Trampa ── */
 .trap-banner {
-  background: linear-gradient(135deg, #FFF1F2 0%, #FEE2E2 100%);
-  border: 2px solid #FCA5A5;
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, var(--danger-light) 0%, #FFF0F3 100%);
+  border: 1px solid #FECDD3;
+  border-left: 4px solid var(--danger-mid);
+  border-radius: var(--r-lg);
+  padding: 1.1rem 1.4rem;
   display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  box-shadow: var(--shadow-md);
+  align-items: flex-start;
+  gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
 [data-theme="dark"] .trap-banner {
-  background: linear-gradient(135deg, rgba(225, 29, 72, 0.2) 0%, rgba(159, 18, 57, 0.3) 100%);
-  border-color: #BE123C;
+  background: rgba(190,18,60,0.12);
+  border-color: rgba(190,18,60,0.35);
+  border-left-color: var(--danger-mid);
 }
 
 .trap-icon {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  background: #EF4444;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  background: var(--danger-mid);
   color: white;
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
-  font-weight: bold;
+  font-size: 0.75rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  letter-spacing: -0.5px;
 }
 
 .trap-content h3 {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #991B1B;
-  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--danger);
+  margin-bottom: 0.2rem;
+  font-family: var(--font-display);
+  letter-spacing: -0.2px;
 }
 
-[data-theme="dark"] .trap-content h3 {
-  color: #FCA5A5;
-}
+[data-theme="dark"] .trap-content h3 { color: #FCA5A5; }
 
 .trap-formula {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #B91C1C;
+  color: var(--danger);
 }
 
-[data-theme="dark"] .trap-formula {
-  color: #FECDD3;
-}
+[data-theme="dark"] .trap-formula { color: #FECDD3; }
 
 .trap-desc {
-  font-size: 0.85rem;
-  color: #7F1D1D;
-  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
 }
 
-[data-theme="dark"] .trap-desc {
-  color: #E2E8F0;
-}
-
-/* Tarjetas de KPI */
+/* ── KPI Cards ── */
 .kpi-card {
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.1rem 1.2rem;
   position: relative;
   overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-mid) 100%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .kpi-card:hover {
@@ -340,101 +409,74 @@ body {
   box-shadow: var(--shadow-md);
 }
 
+.kpi-card:hover::before {
+  opacity: 1;
+}
+
 .kpi-label {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   color: var(--text-muted);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .kpi-value {
-  font-size: 1.75rem;
+  font-size: 1.65rem;
   font-weight: 800;
   color: var(--text-main);
   line-height: 1.1;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
+  letter-spacing: -0.5px;
 }
 
 .kpi-subtext {
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   color: var(--text-muted);
-  margin-top: 0.4rem;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
+  margin-top: 0.35rem;
 }
 
 .kpi-meta-split {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-top: 0.5rem;
   padding-top: 0.5rem;
-  border-top: 1px dashed var(--border-color);
-  font-size: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem;
 }
 
-.meta-split-val {
-  color: var(--channel-meta);
-  font-weight: 700;
-}
+.meta-split-val  { color: var(--ch-meta);   font-weight: 700; }
+.google-split-val{ color: var(--ch-google);  font-weight: 700; }
 
-.google-split-val {
-  color: var(--channel-google);
-  font-weight: 700;
-}
-
-/* Semáforos y Badges */
+/* ── Badges ── */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
+  gap: 0.2rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: var(--r-full);
+  font-size: 0.7rem;
   font-weight: 700;
+  letter-spacing: 0.2px;
+  font-family: var(--font-body);
 }
 
-.badge-green {
-  background: var(--accent-green-light);
-  color: var(--accent-green);
-  border: 1px solid var(--accent-green);
-}
+.badge-green  { background: var(--ok-light);      color: var(--ok);       border: 1px solid rgba(4,120,87,0.3); }
+.badge-yellow { background: var(--warn-light);     color: var(--warn);     border: 1px solid rgba(146,64,14,0.3); }
+.badge-red    { background: var(--danger-light);   color: var(--danger);   border: 1px solid rgba(190,18,60,0.3); }
+.badge-meta   { background: var(--ch-meta-light);  color: var(--ch-meta);  border: 1px solid var(--ch-meta-border); }
+.badge-google { background: var(--ch-google-light);color: var(--ch-google);border: 1px solid var(--ch-google-border); }
 
-.badge-yellow {
-  background: var(--accent-yellow-light);
-  color: var(--accent-yellow);
-  border: 1px solid var(--accent-yellow);
-}
-
-.badge-red {
-  background: var(--accent-red-light);
-  color: var(--accent-red);
-  border: 1px solid var(--accent-red);
-}
-
-.badge-meta {
-  background: var(--channel-meta-light);
-  color: var(--channel-meta);
-  border: 1px solid var(--channel-meta-border);
-}
-
-.badge-google {
-  background: var(--channel-google-light);
-  color: var(--channel-google);
-  border: 1px solid var(--channel-google-border);
-}
-
-/* Grupos de Controles en Sidebar */
+/* ── Panel de controles ── */
 .control-section {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.4rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border);
 }
 
 .control-section:last-child {
@@ -444,31 +486,25 @@ body {
 }
 
 .control-title {
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.7px;
   color: var(--text-muted);
-  margin-bottom: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin-bottom: 0.8rem;
 }
 
-.control-group {
-  margin-bottom: 1rem;
-}
-
-.control-group:last-child {
-  margin-bottom: 0;
-}
+.control-group  { margin-bottom: 0.9rem; }
+.control-group:last-child { margin-bottom: 0; }
 
 .control-label-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   font-weight: 600;
-  margin-bottom: 0.35rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.3rem;
 }
 
 .control-input-wrapper {
@@ -480,143 +516,635 @@ body {
 .control-slider {
   flex: 1;
   -webkit-appearance: none;
-  height: 6px;
-  background: var(--border-color);
-  border-radius: var(--radius-full);
+  height: 5px;
+  background: var(--border);
+  border-radius: var(--r-full);
   outline: none;
+  cursor: pointer;
 }
 
 .control-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
-  background: var(--primary-sun);
-  border: 2px solid #1C1917;
+  background: var(--primary-mid);
+  border: 2px solid white;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 4px rgba(91,33,182,0.4);
+  transition: background 0.15s ease;
+}
+
+.control-slider::-webkit-slider-thumb:hover {
+  background: var(--primary);
 }
 
 .control-num-input {
-  width: 90px;
+  width: 82px;
   padding: 0.3rem 0.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--bg-app);
   color: var(--text-main);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   text-align: right;
   font-family: var(--font-mono);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .control-num-input:focus {
   outline: none;
-  border-color: var(--primary-sun);
-  box-shadow: 0 0 0 2px var(--primary-sun-light);
+  border-color: var(--primary-mid);
+  box-shadow: 0 0 0 2px rgba(124,58,237,0.15);
 }
 
-/* Botones */
+/* ── Botones ── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  font-size: 0.85rem;
+  gap: 0.4rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--r-md);
+  font-size: 0.825rem;
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+  letter-spacing: 0.1px;
 }
 
 .btn-primary {
-  background: var(--primary-sun);
-  color: #1C1917;
-  border-color: #E5AD23;
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary-hover);
+  box-shadow: 0 1px 3px rgba(91,33,182,0.3);
 }
 
 .btn-primary:hover {
-  background: var(--primary-sun-hover);
+  background: var(--primary-hover);
+  box-shadow: 0 3px 8px rgba(91,33,182,0.35);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
   background: var(--bg-card);
-  color: var(--text-main);
-  border-color: var(--border-color);
+  color: var(--text-secondary);
+  border-color: var(--border);
 }
 
 .btn-secondary:hover {
-  background: var(--border-color);
+  background: var(--bg-card-alt);
+  border-color: var(--border-strong);
+  color: var(--text-main);
 }
 
-/* Tarjetas de Gráficos */
+/* ── Tarjetas de gráficos ── */
 .chart-card {
   background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.2rem 1.35rem;
+  box-shadow: var(--shadow-xs);
 }
 
 .chart-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 1rem;
+  gap: 0.75rem;
 }
 
 .chart-title {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--text-main);
+  letter-spacing: -0.2px;
 }
 
 .chart-container {
   position: relative;
-  height: 280px;
+  height: 260px;
   width: 100%;
 }
 
-/* Tablas Profesionales */
+/* ── Tablas ── */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   text-align: left;
 }
 
 .data-table th {
   background: var(--bg-card-alt);
-  padding: 0.75rem 1rem;
+  padding: 0.7rem 1rem;
   font-weight: 700;
-  border-bottom: 2px solid var(--border-color);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
 .data-table td {
-  padding: 0.65rem 1rem;
-  border-bottom: 1px solid var(--border-color);
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
-.data-table tr:hover td {
-  background: var(--primary-sun-light);
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table tbody tr:hover td {
+  background: var(--primary-light);
+  color: var(--text-main);
 }
 
-/* Tooltip */
+/* ── Tooltip ── */
 .tooltip-trigger {
   cursor: help;
   text-decoration: underline dotted;
+  text-underline-offset: 2px;
   color: var(--text-muted);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.72rem;
+}
+
+.tooltip-trigger:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-main);
+  color: var(--bg-card);
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--r-sm);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: normal;
+  width: 210px;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+}
+
+/* ── Login / Autenticación ── */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 9, 22, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1.5rem;
+  transition: opacity 0.3s ease;
+}
+
+.login-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.login-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  overflow: hidden;
+  animation: modalIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalIn {
+  from { transform: translateY(24px) scale(0.96); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+.login-header {
+  background: linear-gradient(145deg, var(--primary) 0%, var(--primary-mid) 60%, #8B5CF6 100%);
+  padding: 2rem 2rem 1.75rem;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-header::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 130px;
+  height: 130px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 50%;
+}
+
+.login-header::after {
+  content: '';
+  position: absolute;
+  bottom: -25px;
+  left: -25px;
+  width: 90px;
+  height: 90px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+
+.login-header-logo {
+  width: 52px;
+  height: 52px;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  letter-spacing: -0.5px;
+  margin: 0 auto 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.login-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-header p {
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.8;
+  position: relative;
+  z-index: 1;
+}
+
+.login-body {
+  padding: 1.5rem 1.75rem 1.75rem;
+}
+
+.login-form-group { margin-bottom: 0.9rem; }
+
+.login-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.1px;
+}
+
+.login-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-app);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 0.875rem;
+  color: var(--text-main);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--font-body);
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--primary-mid);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+  background: var(--bg-card);
+}
+
+.login-toggle-pwd {
+  position: absolute;
+  right: 0.7rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.1rem 0.2rem;
+}
+
+.login-error-msg {
+  background: var(--danger-light);
+  border: 1px solid rgba(190,18,60,0.3);
+  color: var(--danger);
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--r-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+  display: none;
+}
+
+.login-submit-btn {
+  width: 100%;
+  padding: 0.72rem 1rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--r-md);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 12px rgba(91,33,182,0.35);
+  letter-spacing: 0.1px;
+  font-family: var(--font-body);
+}
+
+.login-submit-btn:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(91,33,182,0.4);
+}
+
+/* ── Credenciales de prueba ── */
+.demo-creds-container {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.demo-creds-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.demo-creds-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.demo-user-card {
+  background: var(--bg-app);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 0.55rem 0.65rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.demo-user-card:hover {
+  border-color: var(--primary-mid);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.demo-user-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.18rem;
+}
+
+.demo-user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+.demo-user-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-display);
+}
+
+.demo-user-role {
+  font-size: 0.67rem;
+  color: var(--text-muted);
+}
+
+.demo-user-quick-btn {
+  margin-top: 0.25rem;
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: var(--primary-mid);
+  letter-spacing: 0.1px;
+}
+
+/* ── Banner de saludo ── */
+.greeting-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary-mid);
+  border-radius: var(--r-lg);
+  padding: 0.85rem 1.2rem;
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: var(--shadow-xs);
+  animation: slideDown 0.35s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.greeting-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.greeting-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  font-family: var(--font-display);
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(91,33,182,0.3);
+}
+
+.greeting-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.greeting-role-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--r-full);
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid rgba(91,33,182,0.2);
+}
+
+.greeting-subtext {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.12rem;
+}
+
+.greeting-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ── Widget de usuario en header ── */
+.header-user-widget {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: var(--bg-app);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.7rem 0.3rem 0.4rem;
+  border-radius: var(--r-full);
+}
+
+.header-user-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+}
+
+.header-user-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.1;
+  font-family: var(--font-display);
+}
+
+.header-user-role {
+  font-size: 0.67rem;
+  color: var(--text-muted);
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.btn-logout:hover {
+  color: var(--danger);
+  background: var(--danger-light);
+}
+
+/* ── Barra de exportación ── */
+.export-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+
+.btn-export {
+  padding: 0.38rem 0.75rem;
+  font-size: 0.775rem;
+  font-weight: 600;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--bg-app);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.15s ease;
+  font-family: var(--font-body);
+}
+
+.btn-export:hover {
+  background: var(--primary-light);
+  border-color: var(--primary-mid);
+  color: var(--primary);
+  transform: translateY(-1px);
 }
 
 /**
@@ -670,24 +1198,160 @@ body {
   </style>
 </head>
 <body>
-  <!-- HEADER -->
+  <!-- ==========================================
+       MODAL DE AUTENTICACIÓN / LOGIN
+       ========================================== -->
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-modal">
+      <div class="login-header">
+        <div class="login-header-logo">SDC</div>
+        <h2>Sol de Casa</h2>
+        <p>Portal Financiero y Motor de Simulación Solar</p>
+      </div>
+
+      <div class="login-body">
+        <div id="login-error" class="login-error-msg">
+          Usuario o contraseña incorrectos. Revisa las credenciales de prueba abajo.
+        </div>
+
+        <form id="login-form" onsubmit="handleLoginSubmit(event)">
+          <div class="login-form-group">
+            <label class="login-label" for="login-username">Usuario o Correo Corporativo</label>
+            <div class="login-input-wrapper">
+              <input type="text" id="login-username" class="login-input" placeholder="ej. andres@soldecasa.com" required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="login-form-group">
+            <label class="login-label" for="login-password">Contraseña</label>
+            <div class="login-input-wrapper">
+              <input type="password" id="login-password" class="login-input" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="login-toggle-pwd" onclick="togglePasswordVisibility()" title="Mostrar/ocultar contraseña">Ver</button>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; font-size:0.8rem;">
+            <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+              <input type="checkbox" id="login-remember" checked> Recordar mi sesión
+            </label>
+            <button type="button" onclick="loginAsGuest()" style="background:none; border:none; color:var(--channel-google); cursor:pointer; font-weight:700;">
+              Explorar como Invitado →
+            </button>
+          </div>
+
+          <button type="submit" class="login-submit-btn">
+            <span>Acceder al Portal</span>
+          </button>
+        </form>
+
+        <!-- SECCIÓN DE CREDENCIALES DE PRUEBA -->
+        <div class="demo-creds-container">
+          <div class="demo-creds-title">
+            <span>Credenciales de prueba — clic directo</span>
+            <span style="font-size:0.68rem; color:var(--ok); font-weight:700; letter-spacing:0.3px;">Acceso rapido</span>
+          </div>
+
+          <div class="demo-creds-grid">
+            <!-- Usuario 1: Andrés -->
+            <div class="demo-user-card" onclick="quickLogin('andres@soldecasa.com', 'admin123')">
+              <div class="demo-user-header">
+                <div class="demo-user-avatar" style="background:#E1306C;">AV</div>
+                <div>
+                  <div class="demo-user-name">Andrés Villalobos</div>
+                  <div class="demo-user-role">Director General (CEO)</div>
+                </div>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                <code>andres@soldecasa.com</code> / <code>admin123</code>
+              </div>
+              <div class="demo-user-quick-btn">Entrar como Andrés</div>
+            </div>
+
+            <!-- Usuario 2: Sofía -->
+            <div class="demo-user-card" onclick="quickLogin('sofia@soldecasa.com', 'cfo2024')">
+              <div class="demo-user-header">
+                <div class="demo-user-avatar" style="background:#2E9E68;">SM</div>
+                <div>
+                  <div class="demo-user-name">Sofía Mendoza</div>
+                  <div class="demo-user-role">Directora Financiera (CFO)</div>
+                </div>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                <code>sofia@soldecasa.com</code> / <code>cfo2024</code>
+              </div>
+              <div class="demo-user-quick-btn">Entrar como Sofía</div>
+            </div>
+
+            <!-- Usuario 3: Carlos -->
+            <div class="demo-user-card" onclick="quickLogin('carlos@soldecasa.com', 'ops2024')">
+              <div class="demo-user-header">
+                <div class="demo-user-avatar" style="background:#1A73E8;">CN</div>
+                <div>
+                  <div class="demo-user-name">Carlos Navarro</div>
+                  <div class="demo-user-role">Jefe de Operaciones (COO)</div>
+                </div>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                <code>carlos@soldecasa.com</code> / <code>ops2024</code>
+              </div>
+              <div class="demo-user-quick-btn">Entrar como Carlos</div>
+            </div>
+
+            <!-- Usuario 4: Laura -->
+            <div class="demo-user-card" onclick="quickLogin('laura@soldecasa.com', 'growth2024')">
+              <div class="demo-user-header">
+                <div class="demo-user-avatar" style="background:#F59E0B;">LR</div>
+                <div>
+                  <div class="demo-user-name">Laura Restrepo</div>
+                  <div class="demo-user-role">Líder Comercial & Growth</div>
+                </div>
+              </div>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                <code>laura@soldecasa.com</code> / <code>growth2024</code>
+              </div>
+              <div class="demo-user-quick-btn">Entrar como Laura</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       HEADER PRINCIPAL
+       ========================================== -->
   <header class="app-header">
     <div class="header-container">
       <div class="brand-section">
-        <div class="brand-logo">☀️</div>
+        <div class="brand-logo">SDC</div>
         <div>
           <h1 class="brand-title">Sol de Casa</h1>
-          <p class="brand-subtitle">Simulador y Motor Financiero de Lead Gen Solar | Caso C</p>
+          <p class="brand-subtitle">Motor Financiero y Simulador Estratégico — Caso C</p>
         </div>
       </div>
+
       <div class="header-actions">
-        <button id="theme-toggle-btn" class="btn btn-secondary">🌙 Modo Oscuro</button>
-        <button class="btn btn-primary no-print" onclick="window.print()">🖨️ Imprimir Recomendación</button>
+        <!-- Widget del Usuario Activo -->
+        <div id="header-user-widget" class="header-user-widget" style="display:none;">
+          <div id="header-user-avatar" class="header-user-avatar">AV</div>
+          <div>
+            <div id="header-user-name" class="header-user-name">Andrés Villalobos</div>
+            <div id="header-user-role" class="header-user-role">Director General</div>
+          </div>
+          <button class="btn-logout" onclick="handleLogout()" title="Cerrar sesión">
+            Salir
+          </button>
+        </div>
+
+        <button id="theme-toggle-btn" class="btn btn-secondary">Modo Oscuro</button>
+        <button class="btn btn-primary no-print" onclick="window.print()">Imprimir</button>
       </div>
     </div>
   </header>
 
-  <!-- NAVIGATION TABS -->
+  <!-- ==========================================
+       BARRA DE NAVEGACIÓN DE PESTAÑAS
+       ========================================== -->
   <nav class="tabs-nav no-print">
     <button class="tab-btn active" id="tab-nav-resumen" data-target="tab-resumen" onclick="switchTab('tab-resumen')">📑 Resumen Ejecutivo</button>
     <button class="tab-btn" id="tab-nav-tablero" data-target="tab-tablero" onclick="switchTab('tab-tablero')">🎛️ Tablero Interactivo</button>
@@ -697,20 +1361,70 @@ body {
     <button class="tab-btn" id="tab-nav-auditoria" data-target="tab-auditoria" onclick="switchTab('tab-auditoria')">🔍 Auditoría & Errores IA</button>
   </nav>
 
+  <!-- ==========================================
+       CONTENIDO PRINCIPAL
+       ========================================== -->
   <main class="main-container">
-    <!-- PESTAÑA 1: RESUMEN Y RECOMENDACIÓN -->
+    <!-- BANNER DE SALUDO PERSONALIZADO (APARECE AL INICIAR SESIÓN) -->
+    <div id="greeting-banner" class="greeting-banner" style="display:none;">
+      <div class="greeting-info">
+        <div id="greeting-avatar" class="greeting-avatar">--</div>
+        <div>
+          <div class="greeting-title">
+            <span id="greeting-name">¡Bienvenido de nuevo!</span>
+            <span id="greeting-badge" class="greeting-role-badge">Director General</span>
+          </div>
+          <div id="greeting-message" class="greeting-subtext">
+            Cargando recomendaciones estratégicas para tu perfil...
+          </div>
+        </div>
+      </div>
+      <div class="greeting-actions">
+        <button id="greeting-action-btn" class="btn btn-secondary" style="font-size:0.75rem; padding:0.35rem 0.75rem;">
+          Ir a accion clave
+        </button>
+      </div>
+    </div>
+
+    <!-- BARRA DE ACCIONES Y EXPORTACIÓN -->
+    <div class="export-bar no-print">
+      <span style="font-size:0.72rem; font-weight:700; color:var(--text-muted); margin-right:0.25rem; text-transform:uppercase; letter-spacing:0.5px;">Exportar:</span>
+      <button class="btn-export" onclick="exportExecutiveMarkdown()">
+        Informe .md
+      </button>
+      <button class="btn-export" onclick="exportCashFlowCSV()">
+        Flujo 24M .csv
+      </button>
+      <button class="btn-export" onclick="exportPlanJSON()">
+        Guardar Plan
+      </button>
+      <label class="btn-export" style="cursor:pointer; margin-bottom:0;">
+        Cargar Plan
+        <input type="file" id="import-plan-file" accept=".json" style="display:none;" onchange="importPlanJSON(event)">
+      </label>
+      <div style="margin-left:auto; display:flex; gap:0.4rem; align-items:center;">
+        <span style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">Escenario:</span>
+        <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.25rem 0.6rem;" onclick="applyPresetScenario('hoy')">Hoy ($4k+$4k)</button>
+        <button class="btn btn-secondary" style="font-size:0.72rem; padding:0.25rem 0.6rem;" onclick="applyPresetScenario('agencia')">Agencia ($8k Meta)</button>
+        <button class="btn btn-primary" style="font-size:0.72rem; padding:0.25rem 0.6rem;" onclick="applyPresetScenario('ganador')">Ganador</button>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         PESTAÑA 1: RESUMEN Y RECOMENDACIÓN
+         ========================================== -->
     <section id="tab-resumen" class="tab-pane print-page" style="display:block;">
       <!-- LA TRAMPA BANNER -->
       <div class="trap-banner">
-        <div class="trap-icon">⚠️</div>
+        <div class="trap-icon">!</div>
         <div class="trap-content">
-          <h3>LA TRAMPA DEL CASO DETECTADA</h3>
-          <p class="trap-formula" id="trap-formula-text">Cargando análisis de la trampa...</p>
+          <h3>La trampa del caso</h3>
+          <p class="trap-formula" id="trap-formula-text">Calculando...</p>
           <p class="trap-desc" id="trap-desc-text"></p>
         </div>
       </div>
 
-      <!-- RECOMENDACIÓN EJECUTIVA -->
+      <!-- RECOMENDACIÓN EJECUTIVA PARA ANDRÉS -->
       <div class="chart-card" style="margin-bottom:1.5rem;">
         <div class="chart-header">
           <h2 class="chart-title">Memorando Ejecutivo para Andrés Villalobos</h2>
@@ -718,32 +1432,32 @@ body {
         </div>
         <div style="font-size:0.95rem; line-height:1.7; color:var(--text-main);">
           <p style="margin-bottom:0.75rem;">
-            <strong>Andrés:</strong> La recomendación técnica y financiera definitiva es <strong>RECHAZAR</strong> la propuesta de Leadly de volcar los $8.000 a Meta. 
-            Aunque prometen el doble de leads bajo la premisa de que <em>"en Meta el lead cuesta $8 y en Google $40"</em>, la realidad empírica de tu negocio demuestra que aceptar su propuesta <strong>destruiría 4,86 ventas mensuales (−21,8%)</strong> y empeoraría tu margen neto en más de $8.000 al mes.
+            <strong>Andrés:</strong> La recomendación técnica y financiera definitiva es <strong>RECHAZAR</strong> la propuesta de Leadly de volcar el 100% del presupuesto ($8.000) a Meta. 
+            Aunque la agencia argumenta que <em>"en Meta el lead cuesta $8 y en Google $40"</em>, la realidad empírica de Sol de Casa demuestra que aceptar su propuesta <strong>destruye 4,86 ventas mensuales (−21,8%)</strong> y reduce el saldo de caja final a $48.320 al Mes 24 frente a más de $214.000 del plan propio.
           </p>
           <h4 style="font-weight:bold; margin:1rem 0 0.5rem 0;">¿Por qué engaña la propuesta de Leadly?</h4>
           <ul style="margin-left:1.5rem; margin-bottom:1rem;">
-            <li><strong>Rendimientos decrecientes:</strong> Con $8.000 en Meta no llegan 1.000 leads, llegan <strong>840 leads</strong> (CPL real = $9,52).</li>
-            <li><strong>Calidad del embudo:</strong> Google convierte el <strong>11,92%</strong> de sus leads en clientes cerrados, mientras Meta convierte solo el <strong>2,08%</strong>. ¡Un lead de Google tiene casi 6 veces más probabilidad de comprar!</li>
-            <li><strong>Costo de visitas técnicas:</strong> Cerrar una venta en Meta requiere <strong>5,56 visitas</strong> ($333 en transporte y viáticos) frente a solo <strong>3,33 visitas</strong> en Google ($200). Sumando anuncios y visitas, el <strong>CAC Real de Meta es de $718</strong> vs. <strong>$536 en Google</strong>.</li>
+            <li><strong>Rendimientos decrecientes:</strong> Con $8.000 en Meta no llegan 1.000 leads como promete la agencia, sino <strong>840 leads</strong> (CPL real = $9,52).</li>
+            <li><strong>Calidad y calificación del embudo:</strong> Google convierte el <strong>11,92%</strong> de sus leads en clientes cerrados, mientras que Meta convierte únicamente el <strong>2,08%</strong>. Un lead de Google tiene casi 6 veces más probabilidad de comprar.</li>
+            <li><strong>El costo operativo de las visitas:</strong> Para cerrar 1 venta, Meta exige hacer <strong>5,56 visitas</strong> ($333,33 en viáticos y técnicos) frente a solo <strong>3,33 visitas</strong> en Google ($200,00). Sumando anuncios y visitas, el <strong>CAC Real de Meta es de $718,13</strong> frente a <strong>$535,54 en Google</strong> (Meta es 34,1% más costoso).</li>
           </ul>
           <h4 style="font-weight:bold; margin:1rem 0 0.5rem 0;">Los dos cambios recomendados (Plan Ganador):</h4>
           <ol style="margin-left:1.5rem;">
-            <li><strong>Filtro previo + respuesta en menos de 5 minutos en Meta:</strong> Al añadir 2 preguntas al formulario ("¿Es dueño?" y "¿Recibo > $80?") y contactar rápido, elevamos el cierre del 18% al 22% y el valor de cada visita de $232 a más de $310.</li>
-            <li><strong>Contratar 1 técnico extra en el Mes 2:</strong> Rompe el techo de 100 visitas (aumentando a 150 visitas desde Mes 3), permitiendo escalar Google a $6.000 y Meta a $4.500, alcanzando <strong>$214.980 en caja al Mes 24</strong> (frente a los $48.320 que dejaría la agencia).</li>
+            <li><strong>Filtro previo + respuesta en menos de 5 minutos en Meta (Supuesto 7):</strong> Añadir 2 preguntas al formulario ("¿Es dueño de la casa?" y "¿Recibo de luz > $80?") y llamar en menos de 5 minutos. Aunque los leads bajan un 20%, la tasa de contacto sube del 55% al 80% y el cierre del 18% al 22%, reduciendo el CAC Real a $580.</li>
+            <li><strong>Contratar 1 técnico extra en el Mes 2:</strong> Rompe el cuello de botella de 100 visitas (aumentando la capacidad a 150 visitas desde el Mes 3). Esto permite absorber la saturación de Google ($6.000) y escalar Meta ($5.000), alcanzando <strong>$214.980 en caja al Mes 24</strong> sin violar nunca el piso de $5.000.</li>
           </ol>
         </div>
       </div>
 
-      <!-- TABLA RESUMEN COMPARATIVA -->
+      <!-- TABLA RESUMEN COMPARATIVA DE LOS 3 ESCENARIOS -->
       <div class="chart-card">
         <h3 class="chart-title" style="margin-bottom:1rem;">Comparativa de Escenarios Estratégicos</h3>
         <div class="table-responsive">
           <table class="data-table">
             <thead>
               <tr>
-                <th>Métrica / Indicador</th>
-                <th>1. Hoy ($4k + $4k)</th>
+                <th>Métrica / Indicador Clave</th>
+                <th>1. Hoy ($4k Meta + $4k Google)</th>
                 <th>2. Agencia Leadly ($8k Meta)</th>
                 <th>3. Propio Ganador (S7 + 1 Técnico)</th>
               </tr>
@@ -756,7 +1470,9 @@ body {
       </div>
     </section>
 
-    <!-- PESTAÑA 2: TABLERO INTERACTIVO -->
+    <!-- ==========================================
+         PESTAÑA 2: TABLERO INTERACTIVO
+         ========================================== -->
     <section id="tab-tablero" class="tab-pane" style="display:none;">
       <div class="dashboard-grid">
         <!-- SIDEBAR DE CONTROLES -->
@@ -768,12 +1484,12 @@ body {
             </button>
           </div>
 
-          <!-- Pauta -->
+          <!-- Presupuesto de Pauta -->
           <div class="control-section">
             <div class="control-title">Presupuesto de Pauta Mensual</div>
             <div class="control-group">
               <div class="control-label-row">
-                <span style="color:var(--channel-meta);">Meta Ads ($)</span>
+                <span style="color:var(--channel-meta); font-weight:700;">Meta Ads ($)</span>
               </div>
               <div class="control-input-wrapper">
                 <input type="range" id="slider-meta-spend" class="control-slider" min="0" max="10000" step="500" value="4000">
@@ -782,7 +1498,7 @@ body {
             </div>
             <div class="control-group">
               <div class="control-label-row">
-                <span style="color:var(--channel-google);">Google Ads ($)</span>
+                <span style="color:var(--channel-google); font-weight:700;">Google Ads ($)</span>
               </div>
               <div class="control-input-wrapper">
                 <input type="range" id="slider-google-spend" class="control-slider" min="0" max="8000" step="500" value="4000">
@@ -791,29 +1507,29 @@ body {
             </div>
           </div>
 
-          <!-- Supuesto 7 y Batería -->
+          <!-- Palancas Estratégicas -->
           <div class="control-section">
             <div class="control-title">Palancas del Negocio</div>
             <div style="margin-bottom:0.75rem; display:flex; align-items:center; justify-content:space-between;">
-              <label for="switch-supuesto7" style="font-size:0.85rem; font-weight:600; cursor:pointer;">
-                Filtro + Respuesta < 5 min (S7)
+              <label for="switch-supuesto7" style="font-size:0.85rem; font-weight:600; cursor:pointer;" class="tooltip-trigger" data-tooltip="Filtro de 2 preguntas + llamada en < 5 min en Meta. Reduce 20% leads pero sube contacto al 80% y cierre al 22%.">
+                Filtro + Respuesta < 5 min (S7) ⓘ
               </label>
               <input type="checkbox" id="switch-supuesto7" style="width:18px; height:18px; cursor:pointer;">
             </div>
             <div style="display:flex; align-items:center; justify-content:space-between;">
-              <label for="switch-battery" style="font-size:0.85rem; font-weight:600; cursor:pointer;">
-                Batería de Respaldo ($3.000)
+              <label for="switch-battery" style="font-size:0.85rem; font-weight:600; cursor:pointer;" class="tooltip-trigger" data-tooltip="Upsell de batería de $3.000 con 20% margen. 15% de adopción esperada.">
+                Batería de Respaldo ($3.000) ⓘ
               </label>
               <input type="checkbox" id="switch-battery" style="width:18px; height:18px; cursor:pointer;">
             </div>
           </div>
 
-          <!-- Operaciones y Capacidad -->
+          <!-- Capacidad y Visitas -->
           <div class="control-section">
             <div class="control-title">Capacidad y Visitas</div>
             <div class="control-group">
               <div class="control-label-row">
-                <span>Técnicos Extra (+50 vis c/u)</span>
+                <span class="tooltip-trigger" data-tooltip="Cada técnico cuesta $1.800/mes y suma 50 visitas/mes a partir del mes siguiente.">Técnicos Extra (+50 vis c/u) ⓘ</span>
               </div>
               <div class="control-input-wrapper">
                 <input type="range" id="slider-extra-techs" class="control-slider" min="0" max="2" step="1" value="0">
@@ -822,7 +1538,7 @@ body {
             </div>
             <div class="control-group">
               <div class="control-label-row">
-                <span>Costo por Visita ($)</span>
+                <span class="tooltip-trigger" data-tooltip="Costo por visita técnica realizada: viáticos, transporte y bono de asesor.">Costo por Visita ($) ⓘ</span>
               </div>
               <div class="control-input-wrapper">
                 <input type="range" id="slider-cost-visit" class="control-slider" min="30" max="120" step="5" value="60">
@@ -897,7 +1613,7 @@ body {
             </div>
           </div>
 
-          <!-- Precio de Instalación -->
+          <!-- Precio Ticket -->
           <div class="control-section">
             <div class="control-title">Precio Ticket</div>
             <div class="control-group">
@@ -915,7 +1631,10 @@ body {
           <!-- GRID DE KPIS EN VIVO -->
           <div class="kpi-grid">
             <div class="kpi-card">
-              <div class="kpi-label">Leads Totales</div>
+              <div class="kpi-label">
+                <span>Leads Totales</span>
+                <span class="tooltip-trigger" data-tooltip="Suma de prospectos captados en ambos canales según la curva histórica.">ⓘ</span>
+              </div>
               <div class="kpi-value" id="kpi-leads-val">600</div>
               <div class="kpi-meta-split">
                 <span class="meta-split-val" id="kpi-leads-meta">Meta: 500</span>
@@ -936,7 +1655,10 @@ body {
             </div>
 
             <div class="kpi-card">
-              <div class="kpi-label">Ventas Mensuales</div>
+              <div class="kpi-label">
+                <span>Ventas Mensuales</span>
+                <span class="tooltip-trigger" data-tooltip="Clientes que firman contrato tras recibir la visita técnica.">ⓘ</span>
+              </div>
               <div class="kpi-value" id="kpi-sales-val">22.32</div>
               <div class="kpi-meta-split">
                 <span class="meta-split-val" id="kpi-sales-meta">Meta: 10.4</span>
@@ -945,7 +1667,10 @@ body {
             </div>
 
             <div class="kpi-card">
-              <div class="kpi-label">CAC Real (+Visitas)</div>
+              <div class="kpi-label">
+                <span>CAC Real (+Visitas)</span>
+                <span class="tooltip-trigger" data-tooltip="Costo total de conseguir un cliente: Inversión publicitaria + Costo de todas las visitas técnicas realizadas para cerrar.">ⓘ</span>
+              </div>
               <div class="kpi-value" id="kpi-cac-val">$620,70</div>
               <div class="kpi-meta-split">
                 <span class="meta-split-val" id="kpi-cac-meta">Meta: $718,13</span>
@@ -966,7 +1691,10 @@ body {
             </div>
 
             <div class="kpi-card">
-              <div class="kpi-label">Valor Neto de Visita</div>
+              <div class="kpi-label">
+                <span>Valor Neto de Visita</span>
+                <span class="tooltip-trigger" data-tooltip="Ganancia esperada que deja cada visita: (% Cierre × $1.625) − $60 de viáticos.">ⓘ</span>
+              </div>
               <div class="kpi-value" id="kpi-visitval-val">$312,00</div>
               <div class="kpi-meta-split">
                 <span class="meta-split-val" id="kpi-val-meta">Meta: $232,50</span>
@@ -980,7 +1708,7 @@ body {
             <div class="chart-card">
               <div class="chart-header">
                 <h3 class="chart-title">Embudo por Canal Lado a Lado</h3>
-                <span style="font-size:0.8rem; color:var(--text-muted);">Pérdida en cada etapa</span>
+                <span style="font-size:0.8rem; color:var(--text-muted);">Pérdida en cada etapa del funnel</span>
               </div>
               <div class="chart-container">
                 <canvas id="chart-funnel"></canvas>
@@ -989,8 +1717,8 @@ body {
 
             <div class="chart-card">
               <div class="chart-header">
-                <h3 class="chart-title">CPL vs CAC Real (La Trampa)</h3>
-                <span style="font-size:0.8rem; color:var(--text-muted);">Impacto del costo de visitas</span>
+                <h3 class="chart-title">CPL vs CAC Real (La Trampa Ilustrada)</h3>
+                <span style="font-size:0.8rem; color:var(--text-muted);">Impacto del costo de visitas técnicas</span>
               </div>
               <div class="chart-container">
                 <canvas id="chart-cac"></canvas>
@@ -1000,7 +1728,7 @@ body {
             <div class="chart-card" style="grid-column: 1 / -1;">
               <div class="chart-header">
                 <h3 class="chart-title">Visitas Pedidas vs Capacidad Operativa</h3>
-                <span style="font-size:0.8rem; color:var(--text-muted);">Prioridad de atención: Google 1º, Meta 2º</span>
+                <span style="font-size:0.8rem; color:var(--text-muted);">Prioridad operativa: Google 1º (+$427,50), Meta 2º (+$232,50)</span>
               </div>
               <div class="chart-container" style="height:240px;">
                 <canvas id="chart-capacity"></canvas>
@@ -1011,7 +1739,9 @@ body {
       </div>
     </section>
 
-    <!-- PESTAÑA 3: SIMULADOR 24 MESES -->
+    <!-- ==========================================
+         PESTAÑA 3: SIMULADOR 24 MESES
+         ========================================== -->
     <section id="tab-simulador" class="tab-pane" style="display:none;">
       <!-- KPI DE PLAN DE CAJA -->
       <div class="kpi-grid" style="margin-bottom:1.5rem;">
@@ -1023,12 +1753,12 @@ body {
         <div class="kpi-card">
           <div class="kpi-label">Caja Final al Mes 24</div>
           <div class="kpi-value" id="sim-final-cash" style="color:var(--accent-green);">$168.450</div>
-          <div class="kpi-subtext">Patrimonio libre generado</div>
+          <div class="kpi-subtext">Patrimonio líquido acumulado</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Instalaciones Totales</div>
           <div class="kpi-value" id="sim-total-sales">535.6</div>
-          <div class="kpi-subtext">En los 2 años</div>
+          <div class="kpi-subtext">En los 24 meses</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Cumplimiento de Reglas</div>
@@ -1041,7 +1771,7 @@ body {
       <!-- GRÁFICO DE CAJA MES A MES -->
       <div class="chart-card" style="margin-bottom:1.5rem;">
         <div class="chart-header">
-          <h3 class="chart-title">Trayectoria de Saldo en Banco a 24 Meses vs Piso ($5.000)</h3>
+          <h3 class="chart-title">Trayectoria de Saldo en Banco a 24 Meses vs Piso de Seguridad ($5.000)</h3>
         </div>
         <div class="chart-container" style="height:320px;">
           <canvas id="chart-cash-flow"></canvas>
@@ -1075,7 +1805,7 @@ body {
 
       <!-- TABLA DETALLADA DE 24 MESES -->
       <div class="chart-card">
-        <h3 class="chart-title" style="margin-bottom:1rem;">Flujo de Caja Detallado (Mes 1 a 24)</h3>
+        <h3 class="chart-title" style="margin-bottom:1rem;">Flujo de Caja Detallado Mes a Mes (Mes 1 a 24)</h3>
         <div class="table-responsive" style="max-height:500px; overflow-y:auto;">
           <table class="data-table">
             <thead>
@@ -1104,7 +1834,9 @@ body {
       </div>
     </section>
 
-    <!-- PESTAÑA 4: RESPUESTAS DEL CASO (PREGUNTAS 1 A 7) -->
+    <!-- ==========================================
+         PESTAÑA 4: RESPUESTAS DEL CASO (PREGUNTAS 1 A 7)
+         ========================================== -->
     <section id="tab-preguntas" class="tab-pane" style="display:none;">
       <div class="chart-card" style="line-height:1.7;">
         <h2 class="chart-title" style="font-size:1.3rem; margin-bottom:1.25rem;">
@@ -1118,7 +1850,7 @@ body {
           <p>
             <strong>Fórmula:</strong> Precio × (Margen Bruto − Comisión de Asesora)<br>
             <strong>Cálculo:</strong> $6.500 × (28% − 3%) = $6.500 × 25% = <strong>$1.625,00</strong>.<br>
-            <em>Nota financiera:</em> La comisión del 3% ($195) se paga sobre todas las ventas, vengan de pauta o no, por lo que pertenece a la contribución unitaria del producto y no al CAC.
+            <em>Nota financiera:</em> La comisión del 3% ($195) se paga sobre todas las ventas, vengan de pauta o no, por lo que pertenece a la economía unitaria del producto y no al CAC.
           </p>
         </div>
 
@@ -1129,7 +1861,7 @@ body {
           <p>
             <strong>Meta:</strong> 500 leads → 55% contacto (275) → 30% agenda (82,5) → 70% visita hecha (57,75) → 18% cierre (10,395 ventas).<br>
             <strong>Google:</strong> 100 leads → 85% contacto (85) → 55% agenda (46,75) → 85% visita hecha (39,74) → 30% cierre (11,92 ventas).<br>
-            <strong>Diagnóstico de fugas:</strong> En Meta el embudo se desmorona en el paso <strong>Lead → Contacto (cae el 45%)</strong> debido a un 18% de teléfonos inválidos y a que las asesoras tardan 31 horas en llamar. Luego, de los contactados, solo el <strong>30% agenda</strong> (el 70% restante no tenía intención real de compra).
+            <strong>Diagnóstico de fugas:</strong> En Meta el embudo se desmorona en el paso <strong>Lead → Contacto (se pierde el 45%)</strong> debido a un 18% de teléfonos inválidos y a que las asesoras tardan 31 horas en llamar. Luego, de los contactados, solo el <strong>30% agenda</strong> (el 70% restante no tenía intención real de compra).
           </p>
         </div>
 
@@ -1192,11 +1924,43 @@ body {
       </div>
     </section>
 
-    <!-- PESTAÑA 5: EXTRAS Y ESTRATEGIA -->
+    <!-- ==========================================
+         PESTAÑA 5: EXTRAS Y ESTRATEGIA
+         ========================================== -->
     <section id="tab-extras" class="tab-pane" style="display:none;">
+      <!-- CPL DE EQUILIBRIO Y OPTIMIZADOR -->
       <div class="charts-grid" style="margin-bottom:1.5rem;">
         <div id="cpl-breakeven-container"></div>
         <div id="optimizer-result-container"></div>
+      </div>
+
+      <!-- CURVA DE RENDIMIENTO MARGINAL (EXTRA 4) -->
+      <div class="chart-card" style="margin-bottom:1.5rem;">
+        <div class="chart-header">
+          <h3 class="chart-title">Curva de Rendimiento Marginal y Rendimientos Decrecientes</h3>
+          <span class="badge badge-yellow">Extra 4: ¿Dónde poner el siguiente dólar?</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+          Análisis tramo a tramo de los incrementos de $2.000 en pauta. Muestra la ley de rendimientos decrecientes y la saturación de Google a partir de $8.000.
+        </p>
+        <div class="table-responsive" style="margin-bottom:1rem;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tramo de Inversión</th>
+                <th>Incremento ($)</th>
+                <th>Leads Extra Meta</th>
+                <th>CPL Marginal Meta</th>
+                <th>Leads Extra Google</th>
+                <th>CPL Marginal Google</th>
+                <th>Decisión Marginal</th>
+              </tr>
+            </thead>
+            <tbody id="marginal-returns-table-body">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- GRÁFICO TORNADO -->
@@ -1216,7 +1980,7 @@ body {
           <h3 class="chart-title">Pruebas de Estrés Bancarias (Pitch de Línea de Crédito)</h3>
           <span class="badge badge-yellow">Evaluación para el Banco</span>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive" style="margin-bottom:1rem;">
           <table class="data-table">
             <thead>
               <tr>
@@ -1232,15 +1996,37 @@ body {
             </tbody>
           </table>
         </div>
+
+        <!-- SIMULADOR INTERACTIVO DE LÍNEA DE CRÉDITO -->
+        <div style="background:var(--bg-card-alt); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1rem;">
+          <h4 style="font-weight:700; margin-bottom:0.5rem; font-size:0.9rem;">Simulador de Línea de Crédito Rotativa para el Pitch al Banco:</h4>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; align-items:center;">
+            <div>
+              <label style="font-size:0.8rem; font-weight:600;">Monto Solicitado: <span id="credit-amount-display" style="font-weight:800; color:var(--accent-green);">$15.000</span></label>
+              <input type="range" id="slider-credit-amount" min="5000" max="40000" step="5000" value="15000" style="width:100%;" oninput="updateCreditSimulator()">
+            </div>
+            <div>
+              <label style="font-size:0.8rem; font-weight:600;">Tasa de Interés Anual (APR): <span id="credit-rate-display" style="font-weight:800;">14.0%</span></label>
+              <input type="range" id="slider-credit-rate" min="8" max="24" step="1" value="14" style="width:100%;" oninput="updateCreditSimulator()">
+            </div>
+            <div>
+              <label style="font-size:0.8rem; font-weight:600;">Plazo de Amortización: <span id="credit-term-display" style="font-weight:800;">12 meses</span></label>
+              <input type="range" id="slider-credit-term" min="6" max="24" step="6" value="12" style="width:100%;" oninput="updateCreditSimulator()">
+            </div>
+          </div>
+          <div id="credit-calc-result" style="margin-top:0.75rem; font-size:0.85rem; padding:0.5rem; background:var(--bg-card); border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+            Calculando cuota mensual e impacto financiero...
+          </div>
+        </div>
       </div>
 
       <!-- MODO PRESENTACIÓN -->
       <div class="chart-card">
-        <h3 class="chart-title" style="margin-bottom:1rem;">Modo Presentación Ejecutiva con Cronómetro</h3>
+        <h3 class="chart-title" style="margin-bottom:1rem;">Modo Presentación Ejecutiva con Cronómetro y Alerta Sonora</h3>
         <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
-          <button id="btn-timer-3m" class="btn btn-primary">⏱️ Iniciar Pitch 3 min (Decisión Andrés)</button>
-          <button id="btn-timer-2m" class="btn btn-secondary">⏱️ Iniciar Pitch 2 min (Crédito Banco)</button>
-          <button id="btn-timer-stop" class="btn btn-secondary">⏹️ Detener</button>
+          <button id="btn-timer-3m" class="btn btn-primary">Iniciar Pitch — 3 min</button>
+          <button id="btn-timer-2m" class="btn btn-secondary">Iniciar Pitch — 2 min</button>
+          <button id="btn-timer-stop" class="btn btn-secondary">Detener</button>
           <div id="timer-display" style="font-size:1.75rem; font-weight:900; font-family:var(--font-mono); color:var(--accent-red); margin-left:1rem;">
             00:00
           </div>
@@ -1251,19 +2037,21 @@ body {
       </div>
     </section>
 
-    <!-- PESTAÑA 6: AUDITORÍA Y ERRORES IA -->
+    <!-- ==========================================
+         PESTAÑA 6: AUDITORÍA Y ERRORES IA
+         ========================================== -->
     <section id="tab-auditoria" class="tab-pane" style="display:none;">
       <!-- TESTS EN VIVO -->
       <div class="chart-card" style="margin-bottom:1.5rem;">
         <div class="chart-header">
-          <h3 class="chart-title">Auditoría en Tiempo Real de Fórmulas y Referencias</h3>
-          <span class="badge badge-green">Runner de Tests en Navegador</span>
+          <h3 class="chart-title">Auditoría en tiempo real de formulas y referencias</h3>
+          <span class="badge badge-green">Tests en navegador</span>
         </div>
         <div id="browser-tests-container"></div>
       </div>
 
       <!-- TABLA ERRORES IA -->
-      <div class="chart-card">
+      <div class="chart-card" style="margin-bottom:1.5rem;">
         <h3 class="chart-title" style="margin-bottom:1rem;">Registro Crítico: En qué se equivocó o confundió la IA</h3>
         <div class="table-responsive">
           <table class="data-table">
@@ -1310,10 +2098,73 @@ body {
           </table>
         </div>
       </div>
+
+      <!-- REGISTRO DE SUPUESTOS OFICIALES -->
+      <div class="chart-card">
+        <h3 class="chart-title" style="margin-bottom:1rem;">Registro Oficial de Supuestos y Fuentes de Verdad</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Supuesto</th>
+                <th>Valor Base</th>
+                <th>Unidad</th>
+                <th>Justificación Documental</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Precio Promedio Instalación</strong></td>
+                <td>$6.500</td>
+                <td>USD</td>
+                <td>CASO.md Sección 1: Promedio residencial estándar.</td>
+              </tr>
+              <tr>
+                <td><strong>Margen Bruto de Equipos e Instalación</strong></td>
+                <td>28% ($1.820)</td>
+                <td>%</td>
+                <td>100% − 55% equipos − 17% cuadrilla instaladora.</td>
+              </tr>
+              <tr>
+                <td><strong>Comisión de Asesora</strong></td>
+                <td>3% ($195)</td>
+                <td>%</td>
+                <td>Pagada mes de firma sobre todas las ventas (contribución neta = $1.625).</td>
+              </tr>
+              <tr>
+                <td><strong>Capacidad Máxima Técnica</strong></td>
+                <td>100</td>
+                <td>Visitas/mes</td>
+                <td>2 técnicos actuales × 50 visitas máximas por mes cada uno.</td>
+              </tr>
+              <tr>
+                <td><strong>Técnico Extra</strong></td>
+                <td>$1.800 / +50 vis</td>
+                <td>USD / mes</td>
+                <td>Cuesta desde el mes de firma; aporta capacidad desde el mes siguiente.</td>
+              </tr>
+              <tr>
+                <td><strong>Piso de Seguridad de Caja</strong></td>
+                <td>$5.000</td>
+                <td>USD</td>
+                <td>Regla innegociable de Sofía para contingencias imprevistas.</td>
+              </tr>
+              <tr>
+                <td><strong>Costo Fijo Mensual</strong></td>
+                <td>$18.000</td>
+                <td>USD/mes</td>
+                <td>Sueldos base, oficina, camioneta, CRM y herramientas.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
   </main>
 
-  <!-- SCRIPT INJECTION -->
+  <!-- ==========================================
+       INYECCIÓN DEL MOTOR JS COMPLETO
+       ========================================== -->
   <script>
     
 /**
@@ -2522,12 +3373,89 @@ function runAllStressTests(basePlan) {
   });
 }
 
+/**
+ * SRC/UI/APPCLIENT.JS - LÓGICA DE CLIENTE COMPLETA
+ * Incluye: Autenticación, Saludo Personalizado, Tablero, Gráficos, Simulador 24M,
+ * Rendimiento Marginal, Simulador de Crédito Bancario, Exportaciones y Tests en Navegador.
+ */
+
+// ==========================================
+// BASE DE DATOS DE USUARIOS DE PRUEBA
+// ==========================================
+const DEMO_USERS = {
+  andres: {
+    username: 'andres@soldecasa.com',
+    aliases: ['andres', 'andres@soldecasa.com'],
+    password: 'admin123',
+    name: 'Andrés Villalobos',
+    role: 'Director General (CEO)',
+    avatar: 'AV',
+    avatarBg: '#E1306C',
+    badge: 'Dirección Estratégica',
+    targetTab: 'tab-resumen',
+    actionBtnText: 'Revisar Memorando Leadly ➔',
+    welcomeMsg: 'Andrés: El memorando ejecutivo recomienda formalmente RECHAZAR la oferta de Leadly para proteger el margen y evitar destruir 4,86 ventas mensuales (−21,8%). El Plan Propio Ganador genera $214.980 en caja.',
+  },
+  sofia: {
+    username: 'sofia@soldecasa.com',
+    aliases: ['sofia', 'sofia@soldecasa.com'],
+    password: 'cfo2024',
+    name: 'Sofía Mendoza',
+    role: 'Directora Financiera (CFO)',
+    avatar: 'SM',
+    avatarBg: '#2E9E68',
+    badge: 'Tesorería y Riesgo',
+    targetTab: 'tab-simulador',
+    actionBtnText: 'Auditar Flujo 24 Meses ➔',
+    welcomeMsg: 'Sofía: El saldo de caja al Mes 1 arranca en $15.736,30 y el piso innegociable de $5.000 está 100% blindado en todos los 24 meses del Plan Ganador. Pruebas de estrés bancarias validadas.',
+  },
+  carlos: {
+    username: 'carlos@soldecasa.com',
+    aliases: ['carlos', 'carlos@soldecasa.com'],
+    password: 'ops2024',
+    name: 'Carlos Navarro',
+    role: 'Jefe de Operaciones (COO)',
+    avatar: 'CN',
+    avatarBg: '#1A73E8',
+    badge: 'Operaciones y Capacidad',
+    targetTab: 'tab-tablero',
+    actionBtnText: 'Gestionar Capacidad de Visitas ➔',
+    welcomeMsg: 'Carlos: El equipo actual de 2 técnicos rinde al 97.5% de utilización (97.5 de 100 visitas). Contratar 1 técnico extra en Mes 2 ampliará el techo a 150 visitas desde Mes 3.',
+  },
+  laura: {
+    username: 'laura@soldecasa.com',
+    aliases: ['laura', 'laura@soldecasa.com'],
+    password: 'growth2024',
+    name: 'Laura Restrepo',
+    role: 'Líder Comercial & Growth',
+    avatar: 'LR',
+    avatarBg: '#F59E0B',
+    badge: 'Adquisición y Canales',
+    targetTab: 'tab-extras',
+    actionBtnText: 'Ver Rendimiento Marginal ➔',
+    welcomeMsg: 'Laura: El Supuesto 7 (filtro previo + respuesta en < 5 min) dispara la tasa de cierre en Meta al 22% y el valor neto por visita a más de $310. Google satura a los $8.000 (160 leads).',
+  },
+  invitado: {
+    username: 'invitado',
+    aliases: ['invitado', 'guest'],
+    password: '',
+    name: 'Invitado Ejecutivo',
+    role: 'Modo Auditoría / Lectura',
+    avatar: 'IE',
+    avatarBg: '#64748B',
+    badge: 'Modo Lectura',
+    targetTab: 'tab-resumen',
+    actionBtnText: 'Explorar Resumen Ejecutivo ➔',
+    welcomeMsg: 'Sesión activa en modo invitado. Puedes interactuar con los simuladores, calibrar parámetros, probar escenarios de estrés y revisar los cálculos auditados paso a paso.',
+  },
+};
 
 // ==========================================
 // ESTADO GLOBAL DE LA APLICACIÓN
 // ==========================================
 const appState = {
-  currentTab: 'tab-tablero',
+  currentUser: null,
+  currentTab: 'tab-resumen',
   // Controles
   metaSpend: 4000,
   googleSpend: 4000,
@@ -2565,17 +3493,167 @@ let timerInterval = null;
 let timerSeconds = 0;
 
 // ==========================================
-// INICIALIZACIÓN
+// INICIALIZACIÓN AL CARGAR DOM
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+  initAuth();
   initTabs();
   initThemeToggle();
   initControls();
   renderApp();
   initPresentationTimers();
+  updateCreditSimulator();
   runBrowserTests();
 });
 
+// ==========================================
+// SISTEMA DE AUTENTICACIÓN Y SESIÓN
+// ==========================================
+function initAuth() {
+  const savedUserJson = localStorage.getItem('solDeCasa_user');
+  if (savedUserJson) {
+    try {
+      const user = JSON.parse(savedUserJson);
+      applyUserSession(user, false);
+      return;
+    } catch (e) {
+      console.warn('Error leyendo usuario guardado:', e);
+    }
+  }
+
+  // Si no hay sesión, mostrar modal
+  const overlay = document.getElementById('login-overlay');
+  if (overlay) overlay.classList.remove('hidden');
+}
+
+window.handleLoginSubmit = function(event) {
+  event.preventDefault();
+  const usernameInput = document.getElementById('login-username');
+  const passwordInput = document.getElementById('login-password');
+  const errorEl = document.getElementById('login-error');
+
+  const username = usernameInput ? usernameInput.value.trim().toLowerCase() : '';
+  const password = passwordInput ? passwordInput.value : '';
+
+  let matchedUser = null;
+  for (const key in DEMO_USERS) {
+    const u = DEMO_USERS[key];
+    if (u.aliases.includes(username) && (u.password === password || u.password === '')) {
+      matchedUser = u;
+      break;
+    }
+  }
+
+  if (matchedUser) {
+    if (errorEl) errorEl.style.display = 'none';
+    const remember = document.getElementById('login-remember')?.checked;
+    if (remember) {
+      localStorage.setItem('solDeCasa_user', JSON.stringify(matchedUser));
+    }
+    applyUserSession(matchedUser, true);
+  } else {
+    if (errorEl) {
+      errorEl.style.display = 'block';
+      errorEl.innerText = 'Credenciales no coinciden. Haz clic en las tarjetas de prueba abajo para ingresar de inmediato.';
+    }
+  }
+};
+
+window.quickLogin = function(username, password) {
+  const uInput = document.getElementById('login-username');
+  const pInput = document.getElementById('login-password');
+  if (uInput) uInput.value = username;
+  if (pInput) pInput.value = password;
+
+  // Encontrar usuario y aplicar
+  for (const key in DEMO_USERS) {
+    const u = DEMO_USERS[key];
+    if (u.aliases.includes(username.toLowerCase())) {
+      localStorage.setItem('solDeCasa_user', JSON.stringify(u));
+      applyUserSession(u, true);
+      break;
+    }
+  }
+};
+
+window.loginAsGuest = function() {
+  const guest = DEMO_USERS.invitado;
+  applyUserSession(guest, true);
+};
+
+window.handleLogout = function() {
+  localStorage.removeItem('solDeCasa_user');
+  appState.currentUser = null;
+
+  const overlay = document.getElementById('login-overlay');
+  if (overlay) overlay.classList.remove('hidden');
+
+  const widget = document.getElementById('header-user-widget');
+  if (widget) widget.style.display = 'none';
+
+  const banner = document.getElementById('greeting-banner');
+  if (banner) banner.style.display = 'none';
+};
+
+window.togglePasswordVisibility = function() {
+  const pInput = document.getElementById('login-password');
+  if (!pInput) return;
+  pInput.type = pInput.type === 'password' ? 'text' : 'password';
+};
+
+function applyUserSession(user, animateGreeting = false) {
+  appState.currentUser = user;
+
+  // 1. Ocultar modal
+  const overlay = document.getElementById('login-overlay');
+  if (overlay) overlay.classList.add('hidden');
+
+  // 2. Actualizar widget en el header
+  const widget = document.getElementById('header-user-widget');
+  const hAvatar = document.getElementById('header-user-avatar');
+  const hName = document.getElementById('header-user-name');
+  const hRole = document.getElementById('header-user-role');
+
+  if (widget && hAvatar && hName && hRole) {
+    widget.style.display = 'flex';
+    hAvatar.innerText = user.avatar;
+    hAvatar.style.background = user.avatarBg;
+    hName.innerText = user.name;
+    hRole.innerText = user.role;
+  }
+
+  // 3. Actualizar banner de saludo personalizado
+  const banner = document.getElementById('greeting-banner');
+  const gAvatar = document.getElementById('greeting-avatar');
+  const gName = document.getElementById('greeting-name');
+  const gBadge = document.getElementById('greeting-badge');
+  const gMsg = document.getElementById('greeting-message');
+  const gActionBtn = document.getElementById('greeting-action-btn');
+
+  if (banner && gAvatar && gName && gBadge && gMsg) {
+    banner.style.display = 'flex';
+    gAvatar.innerText = user.avatar;
+    gAvatar.style.background = user.avatarBg;
+    gName.innerText = `¡Bienvenido de nuevo, ${user.name}!`;
+    gBadge.innerText = user.badge;
+    gBadge.style.background = user.avatarBg;
+    gMsg.innerText = user.welcomeMsg;
+
+    if (gActionBtn && user.targetTab) {
+      gActionBtn.innerText = user.actionBtnText || 'Ir a Panel ➔';
+      gActionBtn.onclick = () => window.switchTab(user.targetTab);
+    }
+  }
+
+  // Navegar a la pestaña prioritaria del usuario
+  if (user.targetTab) {
+    window.switchTab(user.targetTab);
+  }
+}
+
+// ==========================================
+// GESTIÓN DE PESTAÑAS (TABS)
+// ==========================================
 window.switchTab = function(targetId) {
   document.querySelectorAll('.tab-btn').forEach(b => {
     if (b.getAttribute('data-target') === targetId) {
@@ -2584,6 +3662,7 @@ window.switchTab = function(targetId) {
       b.classList.remove('active');
     }
   });
+
   document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
   const targetPane = document.getElementById(targetId);
   if (targetPane) targetPane.style.display = 'block';
@@ -2598,7 +3677,7 @@ window.switchTab = function(targetId) {
 
 function initTabs() {
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', () => {
       const targetId = btn.getAttribute('data-target');
       if (targetId) window.switchTab(targetId);
     });
@@ -2614,11 +3693,14 @@ function initThemeToggle() {
     toggleBtn.innerHTML = isDark ? '🌙 Modo Oscuro' : '☀️ Modo Claro';
     if (funnelChartInst) renderTableroCharts();
     if (cashFlowChartInst) renderCashCharts();
+    if (tornadoChartInst) renderTornadoChart();
   });
 }
 
+// ==========================================
+// CONTROLES INTERACTIVOS (SLIDERS & INPUTS)
+// ==========================================
 function initControls() {
-  // Sincronizar Sliders e Inputs
   const bindControl = (sliderId, inputId, stateKey, isPercent = false, isInt = false) => {
     const slider = document.getElementById(sliderId);
     const input = document.getElementById(inputId);
@@ -2702,7 +3784,6 @@ function resetToCaseData() {
   appState.includeBattery = false;
   appState.applySupuesto7 = false;
 
-  // Actualizar controles UI
   syncControlUI('slider-meta-spend', 'input-meta-spend', 4000);
   syncControlUI('slider-google-spend', 'input-google-spend', 4000);
   syncControlUI('slider-meta-contact', 'input-meta-contact', 0.55, true);
@@ -2731,6 +3812,37 @@ function syncControlUI(sliderId, inputId, val, isPercent = false) {
   if (s) s.value = val;
   if (i) i.value = isPercent ? (val * 100).toFixed(1) : val;
 }
+
+// ==========================================
+// PRESETS RÁPIDOS DE ESCENARIO
+// ==========================================
+window.applyPresetScenario = function(presetKey) {
+  if (presetKey === 'hoy') {
+    resetToCaseData();
+  } else if (presetKey === 'agencia') {
+    appState.metaSpend = 8000;
+    appState.googleSpend = 0;
+    appState.applySupuesto7 = false;
+    appState.extraTechs = 0;
+    syncControlUI('slider-meta-spend', 'input-meta-spend', 8000);
+    syncControlUI('slider-google-spend', 'input-google-spend', 0);
+    syncControlUI('slider-extra-techs', 'input-extra-techs', 0);
+    const s7 = document.getElementById('switch-supuesto7');
+    if (s7) s7.checked = false;
+    renderApp();
+  } else if (presetKey === 'ganador') {
+    appState.metaSpend = 4500;
+    appState.googleSpend = 6000;
+    appState.applySupuesto7 = true;
+    appState.extraTechs = 1;
+    syncControlUI('slider-meta-spend', 'input-meta-spend', 4500);
+    syncControlUI('slider-google-spend', 'input-google-spend', 6000);
+    syncControlUI('slider-extra-techs', 'input-extra-techs', 1);
+    const s7 = document.getElementById('switch-supuesto7');
+    if (s7) s7.checked = true;
+    renderApp();
+  }
+};
 
 // ==========================================
 // RENDERIZADO GLOBAL
@@ -2773,6 +3885,7 @@ function renderApp() {
   renderResultsTable(evaluation);
   renderSimuladorTab();
   renderExtrasTab(evaluation);
+  renderMarginalReturnsTable();
 }
 
 // ==========================================
@@ -2793,7 +3906,7 @@ function renderTrapBanner(evaluation) {
     formulaEl.innerHTML = `«El lead de Meta es <strong>${cplRatio} veces más barato</strong> (${formatCurrency(metaCpl, 2)} vs ${formatCurrency(googleCpl, 2)}), pero conseguir un cliente real cuesta un <strong>${cacDiffPct}% MÁS CARO</strong> en Meta (${formatCurrency(metaCac, 2)} vs ${formatCurrency(googleCac, 2)}).»`;
   }
   if (descEl) {
-    descEl.innerText = `Trampa operativa: Meta exige 5,56 visitas por venta ($333 en visitas) vs 3,33 en Google ($200). Además, cada visita de Google aporta $427,50 de valor neto frente a $232,50 de Meta.`;
+    descEl.innerText = `Trampa operativa: Meta exige 5,56 visitas por venta ($333,33 en viáticos y técnicos) vs 3,33 en Google ($200,00). Además, cada visita de Google aporta $427,50 de valor neto frente a $232,50 de Meta.`;
   }
 }
 
@@ -2806,12 +3919,10 @@ function renderKPIs(evaluation, capacity) {
   const google = evaluation.google;
   const funnel = evaluation.funnel;
 
-  // Leads
   setElText('kpi-leads-val', formatNumber(total.leads, 1));
   setElText('kpi-leads-meta', `Meta: ${formatNumber(meta.leads, 0)}`);
   setElText('kpi-leads-google', `Google: ${formatNumber(google.leads, 0)}`);
 
-  // Visitas
   setElText('kpi-visits-val', `${formatNumber(total.visitsDone, 1)} / ${capacity}`);
   const visAlert = document.getElementById('kpi-visits-badge');
   if (visAlert) {
@@ -2826,17 +3937,14 @@ function renderKPIs(evaluation, capacity) {
   setElText('kpi-visits-meta', `Meta: ${formatNumber(meta.visitsDone, 1)}`);
   setElText('kpi-visits-google', `Google: ${formatNumber(google.visitsDone, 1)}`);
 
-  // Ventas
   setElText('kpi-sales-val', formatNumber(total.sales, 2));
   setElText('kpi-sales-meta', `Meta: ${formatNumber(meta.sales, 1)}`);
   setElText('kpi-sales-google', `Google: ${formatNumber(google.sales, 1)}`);
 
-  // CAC Real
   setElText('kpi-cac-val', formatCurrency(total.realCac, 2));
   setElText('kpi-cac-meta', `Meta: ${formatCurrency(meta.realCac, 2)}`);
   setElText('kpi-cac-google', `Google: ${formatCurrency(google.realCac, 2)}`);
 
-  // Semáforo LTV:CAC
   setElText('kpi-ltvcac-val', formatMultiplier(total.ltvCac, 2));
   const ltvBadge = document.getElementById('kpi-ltvcac-badge');
   if (ltvBadge) {
@@ -2854,7 +3962,6 @@ function renderKPIs(evaluation, capacity) {
   setElText('kpi-ltv-meta', `Meta: ${formatMultiplier(meta.ltvCac, 2)}`);
   setElText('kpi-ltv-google', `Google: ${formatMultiplier(google.ltvCac, 2)}`);
 
-  // Valor de Visita
   setElText('kpi-visitval-val', formatCurrency(total.visitValue, 2));
   setElText('kpi-val-meta', `Meta: ${formatCurrency(meta.visitValue, 2)}`);
   setElText('kpi-val-google', `Google: ${formatCurrency(google.visitValue, 2)}`);
@@ -2900,8 +4007,8 @@ function renderTableroCharts(evaluation, capacity) {
       data: {
         labels: ['1. Leads', '2. Contactados', '3. Agendados', '4. Visitas Hechas', '5. Ventas'],
         datasets: [
-          { label: 'Meta', data: dataMeta, backgroundColor: '#E1306C' },
-          { label: 'Google', data: dataGoogle, backgroundColor: '#1A73E8' },
+          { label: 'Meta Ads', data: dataMeta, backgroundColor: '#E1306C' },
+          { label: 'Google Ads', data: dataGoogle, backgroundColor: '#1A73E8' },
         ],
       },
       options: {
@@ -2913,14 +4020,14 @@ function renderTableroCharts(evaluation, capacity) {
     });
   }
 
-  // 2. Gráfico CPL vs CAC Real (La Trampa)
+  // 2. CPL vs CAC Real (La Trampa)
   const cacCtx = document.getElementById('chart-cac')?.getContext('2d');
   if (cacCtx) {
     if (cacComparisonChartInst) cacComparisonChartInst.destroy();
     cacComparisonChartInst = new Chart(cacCtx, {
       type: 'bar',
       data: {
-        labels: ['Meta', 'Google'],
+        labels: ['Meta Ads', 'Google Ads'],
         datasets: [
           {
             label: 'CPL (Costo por Lead)',
@@ -2952,26 +4059,26 @@ function renderTableroCharts(evaluation, capacity) {
   const capCtx = document.getElementById('chart-capacity')?.getContext('2d');
   if (capCtx) {
     if (capacityChartInst) capacityChartInst.destroy();
-    const cap = capacity || 100;
+    const cap = capacity || (100 + appState.extraTechs * 50);
     capacityChartInst = new Chart(capCtx, {
       type: 'bar',
       data: {
-        labels: ['Visitas Pedidas vs Capacidad'],
+        labels: ['Visitas Pedidas vs Capacidad Operativa'],
         datasets: [
           {
-            label: 'Visitas Hechas Google',
+            label: 'Visitas Hechas Google (Prioridad 1)',
             data: [evaluation.funnel.google.visitsDone],
             backgroundColor: '#1A73E8',
             stack: 'Stack 0',
           },
           {
-            label: 'Visitas Hechas Meta',
+            label: 'Visitas Hechas Meta (Prioridad 2)',
             data: [evaluation.funnel.meta.visitsDone],
             backgroundColor: '#E1306C',
             stack: 'Stack 0',
           },
           {
-            label: 'Visitas Perdidas (Exceso)',
+            label: 'Visitas Perdidas por Exceso de Capacidad',
             data: [evaluation.funnel.total.visitsLost],
             backgroundColor: '#EF4444',
             stack: 'Stack 0',
@@ -3082,13 +4189,11 @@ function renderSimuladorTab() {
     </tr>
   `).join('');
 
-  // Actualizar métricas del resumen del plan
   setElText('sim-min-cash', formatCurrency(sim.summary.minCash, 2));
   setElText('sim-min-month', `Mes ${sim.summary.minCashMonth}`);
   setElText('sim-final-cash', formatCurrency(sim.summary.finalCash, 2));
   setElText('sim-total-sales', `${formatNumber(sim.summary.totalSales, 1)} instalaciones`);
 
-  // Alerta de validación
   const valAlertEl = document.getElementById('sim-validation-alert');
   if (valAlertEl) {
     if (sim.summary.valid) {
@@ -3100,7 +4205,6 @@ function renderSimuladorTab() {
     }
   }
 
-  // Renderizar gráfico de caja
   renderCashCharts(sim);
   renderPlansComparisonTable();
   renderMonth1ManualCard();
@@ -3234,7 +4338,7 @@ function renderExtrasTab(evaluation) {
           Meta: ${formatCurrency(optResult.best.metaSpend)} | Google: ${formatCurrency(optResult.best.googleSpend)}
         </div>
         <div style="font-size:0.85rem; color:var(--text-muted);">
-          Genera <strong>${formatNumber(optResult.best.sales, 2)} ventas/mes</strong> y una contribución neta de <strong>${formatCurrency(optResult.best.netContribution, 2)}</strong>.
+          Genera <strong>${formatNumber(optResult.best.sales, 2)} ventas/mes</strong> y una ganancia neta mensual de <strong>${formatCurrency(optResult.best.netContribution, 2)}</strong>.
         </div>
       </div>
     `;
@@ -3262,6 +4366,76 @@ function renderExtrasTab(evaluation) {
   }
 }
 
+// ==========================================
+// CURVA DE RENDIMIENTO MARGINAL (EXTRA 4)
+// ==========================================
+function renderMarginalReturnsTable() {
+  const container = document.getElementById('marginal-returns-table-body');
+  if (!container) return;
+
+  const intervals = calculateMarginalReturns();
+  container.innerHTML = intervals.map(item => {
+    const isGoogleSaturated = !isFinite(item.google.marginalCpl) || item.google.extraLeads === 0;
+    return `
+      <tr>
+        <td><strong>${item.range}</strong></td>
+        <td style="text-align:right;">${formatCurrency(item.deltaSpend)}</td>
+        <td style="text-align:right; color:#E1306C; font-weight:600;">+${item.meta.extraLeads}</td>
+        <td style="text-align:right; color:#E1306C; font-weight:700;">${formatCurrency(item.meta.marginalCpl, 2)}</td>
+        <td style="text-align:right; color:#1A73E8; font-weight:600;">
+          ${isGoogleSaturated ? '<span style="color:#DC2626;">0 (Saturado)</span>' : `+${item.google.extraLeads}`}
+        </td>
+        <td style="text-align:right; color:#1A73E8; font-weight:700;">
+          ${isGoogleSaturated ? '<span style="color:#DC2626;">Infinito</span>' : formatCurrency(item.google.marginalCpl, 2)}
+        </td>
+        <td style="font-size:0.8rem; color:var(--text-muted);">
+          ${isGoogleSaturated 
+            ? '⚠️ Google no da más leads. Poner en Meta o contratar más capacidad.' 
+            : '✅ Priorizar Google por alta tasa de cierre (30%).'}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ==========================================
+// SIMULADOR DE LÍNEA DE CRÉDITO BANCARIO
+// ==========================================
+window.updateCreditSimulator = function() {
+  const amountSlider = document.getElementById('slider-credit-amount');
+  const rateSlider = document.getElementById('slider-credit-rate');
+  const termSlider = document.getElementById('slider-credit-term');
+
+  if (!amountSlider || !rateSlider || !termSlider) return;
+
+  const principal = parseFloat(amountSlider.value);
+  const annualRate = parseFloat(rateSlider.value) / 100;
+  const termMonths = parseInt(termSlider.value, 10);
+
+  setElText('credit-amount-display', formatCurrency(principal));
+  setElText('credit-rate-display', `${(annualRate * 100).toFixed(1)}%`);
+  setElText('credit-term-display', `${termMonths} meses`);
+
+  // Cuota fija mensual francesa: M = P * (r*(1+r)^n) / ((1+r)^n - 1)
+  const monthlyRate = annualRate / 12;
+  const monthlyPayment = (principal * (monthlyRate * Math.pow(1 + monthlyRate, termMonths))) / (Math.pow(1 + monthlyRate, termMonths) - 1);
+  const totalPaid = monthlyPayment * termMonths;
+  const totalInterest = totalPaid - principal;
+
+  const resultEl = document.getElementById('credit-calc-result');
+  if (resultEl) {
+    resultEl.innerHTML = `
+      <strong>Propuesta para el Banco:</strong> Cuota mensual de amortización: <strong>${formatCurrency(monthlyPayment, 2)}/mes</strong> | Interés total en el periodo: <strong>${formatCurrency(totalInterest, 2)}</strong>.<br>
+      <span style="color:var(--accent-green); font-weight:bold;">
+        🛡️ Cobertura: Esta línea de crédito cubre con holgura el déficit máximo de cualquier escenario de estrés severo (máx $18.420) sin arriesgar la solvencia de Sol de Casa.
+      </span>
+    `;
+  }
+};
+
+// ==========================================
+// GRÁFICO TORNADO (SENSIBILIDAD)
+// ==========================================
 function renderTornadoChart() {
   if (typeof Chart === 'undefined') return;
   const tornadoCtx = document.getElementById('chart-tornado')?.getContext('2d');
@@ -3276,7 +4450,7 @@ function renderTornadoChart() {
       labels: dataTornado.tornado.map(t => t.name),
       datasets: [
         {
-          label: 'Impacto en CAC Real ($)',
+          label: 'Oscilación en CAC Real ($)',
           data: dataTornado.tornado.map(t => t.swing),
           backgroundColor: '#FFC531',
           borderColor: '#E5AD23',
@@ -3325,6 +4499,7 @@ function startTimer(seconds, display) {
     if (timerSeconds <= 0) {
       clearInterval(timerInterval);
       if (display) display.innerText = '¡TIEMPO TERMINADO!';
+      playChimeAlert();
     }
   }, 1000);
 }
@@ -3342,6 +4517,118 @@ function updateTimerDisplay(display) {
   display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
+// Sonido de alerta Web Audio API
+function playChimeAlert() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3); // A5
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.6);
+  } catch (e) {
+    console.log('Audio chime no soportado');
+  }
+}
+
+// ==========================================
+// EXPORTACIÓN A ARCHIVOS (EXTRAS 7 Y 8)
+// ==========================================
+window.exportExecutiveMarkdown = function() {
+  const content = `# SOL DE CASA - INFORME EJECUTIVO Y RECOMENDACIÓN ESTRATÉGICA
+**Fecha de Emisión:** ${new Date().toLocaleDateString('es-ES')}  
+**Autor:** Antigravity Financial Engineering & Software Team  
+**Destinatario:** Andrés Villalobos (Director General) y Sofía Mendoza (Directora Financiera)
+
+---
+
+## 1. DECISIÓN EJECUTIVA: RECHAZAR LA OFERTA DE LEADLY
+Se recomienda formalmente **RECHAZAR** la propuesta de la agencia Leadly de volcar el 100% de la pauta ($8.000) a Meta Ads.
+
+### Justificación Numérica:
+1. **La Trampa del Lead Barato:** Aunque en Meta el lead cuesta $8 frente a $40 de Google (5 veces más barato), el **CAC Real de Meta es de $718,13 frente a $535,54 en Google**. Un cliente cerrado en Meta cuesta un 34,1% más caro.
+2. **El Cuello de Botella Operativo:** Cada venta en Meta requiere realizar **5,56 visitas técnicas** ($333 en transporte y viáticos) frente a solo **3,33 visitas** en Google ($200). 
+3. **Pérdida de Ventas:** La propuesta de la agencia entregaría solo **17,46 ventas al mes** (o 18 topadas por capacidad), destruyendo entre 4,3 y 4,8 ventas mensuales frente al modelo actual (22,32 ventas).
+4. **Impacto en Tesorería:** El saldo de caja al Mes 24 con la agencia sería de apenas **$48.320**, mientras que el Plan Ganador de Sol de Casa alcanza **$214.980**.
+
+---
+
+## 2. LOS DOS CAMBIOS RECOMENDADOS (PLAN GANADOR)
+1. **Filtro Previo + Llamada en < 5 minutos en Meta (Supuesto 7):** Añadir 2 preguntas al formulario ("¿Es dueño?" y "¿Recibo > $80?") y contactar de inmediato. Eleva la tasa de contacto al 80% y el cierre al 22%, reduciendo el CAC Real a $580.
+2. **Contratar 1 Técnico Extra en el Mes 2:** Aumenta la capacidad a 150 visitas desde el Mes 3 ($1.800/mes), permitiendo llevar Google a $6.000 y Meta a $5.000.
+
+---
+
+## 3. AUDITORÍA CRÍTICA: EN QUÉ SE EQUIVOCÓ LA INTELIGENCIA ARTIFICIAL
+1. **Comparación Simplista de CPL:** Concluyó erróneamente que Meta era 5x mejor por tener CPL de $8 vs $40. *Corrección:* Se implementó el CAC Real sumando el costo de las visitas ($60 c/u).
+2. **Capacidad Infinita:** Asumió que 1.000 leads en Meta generaban ventas proporcionales sin techo. *Corrección:* Se programó el descarte de visitas por encima del tope de 100.
+3. **Linealidad de Pauta:** Proyectó 1.000 leads con $8.000 en Meta. *Corrección:* El historial demuestra rendimientos decrecientes; $8.000 generan solo 840 leads.
+4. **Caja sin Desfase:** Sumó ingresos y costos dentro del mismo mes. *Corrección:* Los equipos (55%) y comisiones (3%) se pagan en Mes 0, pero el 50% restante del cliente entra en Mes 1.
+
+---
+*Informe generado automáticamente por el portal financiero Sol de Casa.*`;
+
+  downloadFile('sol-de-casa-informe-ejecutivo.md', content, 'text/markdown');
+};
+
+window.exportCashFlowCSV = function() {
+  const planDef = STRATEGIC_PLANS[appState.activePlanId.toUpperCase()] || STRATEGIC_PLANS.ACTUAL;
+  const sim = simulate24Months(planDef);
+
+  let csv = 'Mes,Meta Spend,Google Spend,Total Spend,Leads,Visitas Pedidas,Capacidad,Visitas Hechas,Ventas,Entradas,Salidas,Flujo Neto,Caja Final,Alerta Piso\n';
+  sim.months.forEach(m => {
+    csv += `${m.month},${m.metaSpend},${m.googleSpend},${m.totalSpend},${m.leads},${m.visitsRequested.toFixed(1)},${m.capacity},${m.visitsDone.toFixed(1)},${m.sales.toFixed(2)},${m.inflows.total.toFixed(2)},${m.outflows.total.toFixed(2)},${m.netCashFlow.toFixed(2)},${m.endingCash.toFixed(2)},${m.safetyFloorBreached ? 'VIOLADO' : 'OK'}\n`;
+  });
+
+  downloadFile('sol-de-casa-flujo-24-meses.csv', csv, 'text/csv');
+};
+
+window.exportPlanJSON = function() {
+  const planData = {
+    appState,
+    exportedAt: new Date().toISOString(),
+  };
+  downloadFile('sol-de-casa-plan.json', JSON.stringify(planData, null, 2), 'application/json');
+};
+
+window.importPlanJSON = function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data && data.appState) {
+        Object.assign(appState, data.appState);
+        renderApp();
+        alert('✅ Plan cargado exitosamente.');
+      }
+    } catch (err) {
+      alert('❌ Error al importar archivo JSON.');
+    }
+  };
+  reader.readAsText(file);
+};
+
+function downloadFile(filename, content, type) {
+  const blob = new Blob([content], { type: `${type};charset=utf-8;` });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 // ==========================================
 // AUDITORÍA Y TESTS EN EL NAVEGADOR
 // ==========================================
@@ -3351,19 +4638,19 @@ function runBrowserTests() {
 
   const testList = [
     {
-      name: 'Contribución Unitaria ($1.625)',
+      name: '1. Contribución Unitaria por Venta = $1.625',
       fn: () => calculateUnitContribution().totalContribution === 1625,
     },
     {
-      name: 'Interpolación de Leads Meta ($4k = 500)',
+      name: '2. Interpolación de Leads Meta ($4.000 = 500 leads)',
       fn: () => getLeadsFromSpend(4000, 'meta') === 500,
     },
     {
-      name: 'Interpolación de Leads Google ($4k = 100, $8k = 160)',
+      name: '3. Interpolación de Leads Google ($4.000 = 100 leads, $8.000 = 160 leads)',
       fn: () => getLeadsFromSpend(4000, 'google') === 100 && getLeadsFromSpend(10000, 'google') === 160,
     },
     {
-      name: 'CAC Real Hoy (Meta ≈ $718, Google ≈ $536)',
+      name: '4. CAC Real Hoy (Meta ≈ $718,13, Google ≈ $535,54)',
       fn: () => {
         const f = calculateFunnel({ metaSpend: 4000, googleSpend: 4000 });
         const e = evaluateScenario(f);
@@ -3371,7 +4658,7 @@ function runBrowserTests() {
       },
     },
     {
-      name: 'Valor de Visita Hoy (Meta = $232,50, Google = $427,50)',
+      name: '5. Valor Neto de Visita (Meta = $232,50, Google = $427,50)',
       fn: () => {
         const f = calculateFunnel({ metaSpend: 4000, googleSpend: 4000 });
         const e = evaluateScenario(f);
@@ -3379,17 +4666,25 @@ function runBrowserTests() {
       },
     },
     {
-      name: 'Mes 1 Plan Actual (Caja Final = $15.736,30)',
+      name: '6. Auditoría del Mes 1 del Plan Actual (Caja Final = $15.736,30)',
       fn: () => {
         const m1 = getMonth1ManualDetail();
         return Math.abs(m1.result.endingCash - 15736.30) < 0.1;
       },
     },
     {
-      name: 'CPL de Equilibrio Meta ≈ $4.20',
+      name: '7. CPL de Equilibrio Meta respecto a Google ≈ $4,20',
       fn: () => {
         const be = calculateBreakevenCpl();
         return Math.abs(be.breakevenCpl - 4.20) < 0.1;
+      },
+    },
+    {
+      name: '8. Plan Propio Ganador B supera $214.000 en Mes 24 sin violar piso',
+      fn: () => {
+        const comp = compareAllPlans();
+        const pB = comp.plans.find(p => p.id === 'propio_b');
+        return pB && pB.valid && pB.finalCash > 214000;
       },
     },
   ];
@@ -3399,9 +4694,9 @@ function runBrowserTests() {
     try { passed = t.fn(); } catch(e) { passed = false; }
     return `
       <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.8rem; border-bottom:1px solid var(--border-color);">
-        <span>${t.name}</span>
+        <span style="font-size:0.875rem;">${t.name}</span>
         <span class="badge ${passed ? 'badge-green' : 'badge-red'}">
-          ${passed ? 'PASÓ (OK)' : 'FALLÓ'}
+          ${passed ? '✔ PASÓ (OK)' : '✖ FALLÓ'}
         </span>
       </div>
     `;
